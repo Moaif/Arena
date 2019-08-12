@@ -1,0 +1,20 @@
+{
+	"name": "AMAR",
+	"background": "assets/Background3.png",
+	"stage": "assets/Stage3.png",
+	"floor": "assets/Floor3.png",
+
+	"enemies":[
+		{
+			"delay": 0,
+			"list":[
+				{
+					"x": 0,
+					"y": 150,
+					"z": 1,
+					"id": "dragon3_1"
+				}
+			]
+		}
+	]
+}
