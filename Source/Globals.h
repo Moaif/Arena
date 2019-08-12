@@ -57,7 +57,7 @@ typedef unsigned int uint;
 #define SCREEN_HEIGHT 224
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Space Harrier-Game"
+#define TITLE "Arena"
 
 #define MAX_Z 25
 #define MIN_Z 0
