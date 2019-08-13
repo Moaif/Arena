@@ -1,15 +1,36 @@
-#ifndef _GAMEOBJECT_
-#define _GAMEOBJECT_
+#pragma once
+#include "Vector.h"
+#include <vector>
 
+class Component;
 struct Collider;
 
 class GameObject {
 public:
+	GameObject()
+	{
+		m_transform.setIdentity();
+	}
+
+	GameObject& operator=(const GameObject&);
+	GameObject(const GameObject&);
+
+	virtual ~GameObject();
+
+	virtual void Init();
+	virtual void Update();
+	virtual void Render();
+
 	virtual void OnCollision(Collider* other) {}
 
-public:
-	Collider* collider=nullptr;
-};
+	void AddComponent(Component* component);
+	//TODO template<class TYPE> TYPE* GetComponent();
 
-#endif // !_GAMEOBJECT_
+	Transform& GetTransform(){return m_transform;};
+	void SetTransform(const Transform& transform){m_transform = transform;};
+
+public:
+	Transform m_transform;
+	std::vector<Component*> m_components;
+};
 

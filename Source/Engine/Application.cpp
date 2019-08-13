@@ -8,6 +8,7 @@
 #include "./Modules/ModuleTextures.h"
 #include "./Modules/ModuleTime.h"
 #include "./Modules/ModuleWindow.h"
+#include "../Gameplay/ModuleSceneSega.h"
 
 using namespace std;
 
@@ -22,6 +23,8 @@ Application::Application()
 	modules.push_back(time = new ModuleTime());
 	modules.push_back(fonts = new ModuleFont());
 	modules.push_back(collision = new ModuleCollision());
+
+	modules.push_back(sega = new ModuleSceneSega());
 
 	//Renderer must be here to draw from buffer after all other modules had request to blit
 	modules.push_back(renderer = new ModuleRender());
@@ -50,6 +53,8 @@ bool Application::Init()
 		if((*it)->IsEnabled() == true)
 			ret = (*it)->Start();
 	}
+
+	fade->FadeToBlack(sega, nullptr, 3.0f);
 
 	return ret;
 }

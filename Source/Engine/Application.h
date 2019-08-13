@@ -15,6 +15,7 @@ class ModuleCollision;
 class ModuleParticles;
 class ModuleFont;
 class ModuleTime;
+class ModuleSceneSega;
 
 class Application
 {
@@ -40,6 +41,8 @@ public:
 	ModuleParticles* particles=nullptr;
 	ModuleFont* fonts=nullptr;
 	ModuleTime* time=nullptr;
+
+	ModuleSceneSega* sega = nullptr;
 
 	bool playing;
 

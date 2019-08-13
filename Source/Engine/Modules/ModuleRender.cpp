@@ -62,19 +62,23 @@ update_status ModuleRender::Update()
 	while (!blitQueue.empty())
 	{
 		BlitStruct temp = blitQueue.top();
-		if (temp.sectionNull && temp.blitSectionNull) {
-			Blit(temp.texture, temp.x, temp.y, nullptr, nullptr);
-		}
-		else if (temp.sectionNull) {
-			Blit(temp.texture, temp.x, temp.y, nullptr, &temp.blitSection);
-		}
-		else if (temp.blitSectionNull)
+		if(temp.isBlitSectionValid && temp.isSectionValid)
 		{
-			Blit(temp.texture, temp.x, temp.y, &temp.section, nullptr);
-		}
-		else {
 			Blit(temp.texture, temp.x, temp.y, &temp.section, &temp.blitSection);
 		}
+		else if(temp.isSectionValid)
+		{
+			Blit(temp.texture, temp.x, temp.y, &temp.section,nullptr);
+		}
+		else if(temp.isBlitSectionValid)
+		{
+			Blit(temp.texture, temp.x, temp.y, nullptr, &temp.blitSection);
+		}
+		else
+		{
+			Blit(temp.texture, temp.x, temp.y, nullptr, nullptr);
+		}
+
 		blitQueue.pop();
 	}
 	return UPDATE_CONTINUE;
@@ -103,26 +107,15 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::AddToBlitBuffer(SDL_Texture* texture,const float& x,const float& y, const float& z, SDL_Rect* section, resizeStruct* resizeInfo) {
+void ModuleRender::AddToBlitBuffer(SDL_Texture* texture,const float& x,const float& y, const Layer& layer, SDL_Rect* section, resizeStruct* resizeInfo) {
 	
 	ASSERT(texture != nullptr,AT("Texture parameter was received as null"));
 
 	SDL_Rect empty = { 0,0,0,0 };
 	resizeStruct noResize= { 0,0 };
 	BlitStruct temp;
-	if (section == nullptr && resizeInfo == nullptr) {
-		temp = { texture,x,y,z,empty,noResize,true,true };
-	}
-	else if (section == nullptr) {
-		temp = { texture,x,y,z,empty,*resizeInfo,true,false };
-	}
-
-	else if (resizeInfo == nullptr) {
-		temp = { texture,x,y,z,*section,noResize,false,true };
-	}
-	else {
-		temp = { texture,x,y,z,*section,*resizeInfo,false,false };
-	}
+	temp = { texture,x,y,layer,*section,*resizeInfo,section!=nullptr,resizeInfo!=nullptr };
+	
 	blitQueue.push(temp);
 }
 
@@ -135,33 +128,27 @@ bool ModuleRender::Blit(SDL_Texture* texture,float x,float y, SDL_Rect* section,
 	bool ret = true;
 	SDL_Rect rect;
 
-	if(resizeInfo != NULL)
+	if(resizeInfo)
 	{
 		rect.w = resizeInfo->w;
 		rect.h = resizeInfo->h;
 	}
-	else if (section !=NULL) {
+	else if (section) {
 		rect.w = section->w;
 		rect.h = section->h;
 	}
 	else
 	{
-		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+		SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
 	}
 
-	//Center (0,0) is in the mid-down of the window
+	//Center (0,0) is in the mid of the window
 	x = x + (SCREEN_WIDTH / 2);
-	y = SCREEN_HEIGHT - y;
+	y = (SCREEN_HEIGHT/2) - y;
 
 	//Now we calculate the left-top point where the image should start
-	x = x - (rect.w / 2);
-	y = y - rect.h ;
-
-	rect.x =(int)( x * SCREEN_SIZE);
-	rect.y =(int)( y * SCREEN_SIZE);
-
-	rect.w *= SCREEN_SIZE;
-	rect.h *= SCREEN_SIZE;
+	rect.x =static_cast<int>(x - (rect.w / 2));
+	rect.y = static_cast<int>(y - (rect.h / 2));
 
 	if(SDL_RenderCopy(renderer, texture, section, &rect) != 0)
 	{
@@ -189,7 +176,7 @@ bool ModuleRender::Print(const Font* font,const float& x,const float& y,const st
 	SDL_QueryTexture(tempTexture, NULL, NULL, &rect.w, &rect.h);
 	resizeStruct size = { (int)(rect.w*fontSize),(int)(rect.h*fontSize) };
 
-	AddToBlitBuffer(tempTexture, x, y, FONTS_Z, nullptr, &size);
+	AddToBlitBuffer(tempTexture, x, y, Layer::UI, nullptr, &size);
 	return ret;
 }
 
@@ -220,25 +207,19 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	bool ret = true;
 	SDL_Rect tempRect;
 
-	//Center (0,0) is in the mid-down of the window
+	//Center (0,0) is in the mid of the window
 	tempRect.x = rect.x + (SCREEN_WIDTH / 2);
-	tempRect.y = SCREEN_HEIGHT - rect.y;
+	tempRect.y = (SCREEN_HEIGHT / 2) - rect.y;
 
 	//Now we calculate the left-top point where the image should start
 	tempRect.x = tempRect.x - (rect.w / 2);
-	tempRect.y = tempRect.y - rect.h;
+	tempRect.y = tempRect.y - (rect.h / 2);
 	tempRect.w = rect.w;
 	tempRect.h = rect.h;
 
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
-
-	tempRect.x = (int)(tempRect.x * SCREEN_SIZE);
-	tempRect.y = (int)(tempRect.y * SCREEN_SIZE);
-	tempRect.w *= SCREEN_SIZE;
-	tempRect.h *= SCREEN_SIZE;
-	
 
 	if (SDL_RenderFillRect(renderer, &tempRect) != 0)
 	{

@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Source",
+    "\\Source\\Engine",
+    "\\Source\\Engine\\Modules"
   ],
-  "SelectedNode": "\\Space Harrier-Game.sln",
+  "SelectedNode": "\\Source",
   "PreviewInSolutionExplorer": false
 }

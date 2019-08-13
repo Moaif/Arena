@@ -52,20 +52,11 @@ typedef unsigned int uint;
 #endif
 
 // Configuration -----------
-#define SCREEN_SIZE 3
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 224
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Arena"
-
-#define MAX_Z 25
-#define MIN_Z 0
-#define CLIPDISTANCE 3
-
-#define SHADOW_Z MAX_Z+10
-#define PLAYER_Z INT_MIN+100
-#define FONTS_Z INT_MIN
 
 int getPseudoRand();
 int getRand();

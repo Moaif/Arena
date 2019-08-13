@@ -151,8 +151,10 @@
     <ClInclude Include="Source\Engine\Animation.h" />
     <ClInclude Include="Source\Engine\Application.h" />
     <ClInclude Include="Source\Engine\Brofiler.h" />
+    <ClInclude Include="Source\Engine\Component.h" />
     <ClInclude Include="Source\Engine\Font.h" />
     <ClInclude Include="Source\Engine\GameObject.h" />
+    <ClInclude Include="Source\Gameplay\ModuleSceneSega.h" />
     <ClInclude Include="Source\Globals.h" />
     <ClInclude Include="Source\Engine\json.hpp" />
     <ClInclude Include="Source\Engine\MemLeaks.h" />
@@ -166,11 +168,13 @@
     <ClInclude Include="Source\Engine\Modules\ModuleTextures.h" />
     <ClInclude Include="Source\Engine\Modules\ModuleTime.h" />
     <ClInclude Include="Source\Engine\Modules\ModuleWindow.h" />
-    <ClInclude Include="Source\Engine\Point.h" />
+    <ClInclude Include="Source\Engine\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Application.cpp" />
     <ClCompile Include="Source\Engine\Font.cpp" />
+    <ClCompile Include="Source\Engine\GameObject.cpp" />
+    <ClCompile Include="Source\Gameplay\ModuleSceneSega.cpp" />
     <ClCompile Include="Source\Globals.cpp" />
     <ClCompile Include="Source\Engine\Log.cpp" />
     <ClCompile Include="Source\Main.cpp" />

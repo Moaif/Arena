@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "./Engine/Application.h"
 #include "Globals.h"
-#include <SDL.h>
 #undef main
 
 enum main_states

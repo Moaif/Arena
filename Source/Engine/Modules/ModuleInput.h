@@ -2,7 +2,7 @@
 #define __MODULEINPUT_H__
 
 #include "Module.h"
-#include "../Point.h"
+#include "../Vector.h"
 
 #include <SDL.h>
 
@@ -61,15 +61,15 @@ public:
 	bool GetWindowEvent(EventWindow code) const;
 
 	// Get mouse / axis position
-	const iPoint& GetMouseMotion() const;
-	const iPoint& GetMousePosition() const;
+	const iVector& GetMouseMotion() const;
+	const iVector& GetMousePosition() const;
 
 private:
 	bool		windowEvents[WE_COUNT];
 	KeyState*	keyboard;
 	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
-	iPoint mouse_motion;
-	iPoint mouse;
+	iVector mouse_motion;
+	iVector mouse;
 };
 
 #endif // __MODULEINPUT_H__

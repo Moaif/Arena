@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "../../Globals.h"
-#include "../Point.h"
+#include "../Vector.h"
 #include <queue>
 
 struct SDL_Texture;
@@ -11,6 +11,13 @@ struct SDL_Renderer;
 struct SDL_Rect;
 class Font;
 
+enum class Layer
+{
+	Background,
+	Game,
+	FX,
+	UI,
+};
 
 struct resizeStruct {
 	int w;
@@ -22,16 +29,16 @@ struct BlitStruct
 	SDL_Texture* texture;
 	float x;
 	float y;
-	float z;
+	Layer layer;
 	SDL_Rect section;
 	resizeStruct blitSection;
-	bool sectionNull;
-	bool blitSectionNull;
+	bool isSectionValid;
+	bool isBlitSectionValid;
 };
 
 struct CompareDepth {
 	bool operator()(BlitStruct const & p1, BlitStruct const & p2) {
-		return p1.z < p2.z;
+		return p1.layer < p2.layer;
 	}
 };
 
@@ -47,7 +54,7 @@ public:
 	update_status PostUpdate()override;
 	bool CleanUp()override;
 
-	void AddToBlitBuffer(SDL_Texture* texture, const float& x, const float& y, const float& z, SDL_Rect* section, resizeStruct* resizeInfo);
+	void AddToBlitBuffer(SDL_Texture* texture, const float& x, const float& y, const Layer& layer, SDL_Rect* section, resizeStruct* resizeInfo);
 	bool Blit(SDL_Texture* texture, float x, float y, SDL_Rect* section, resizeStruct* resizeInfo);
 	bool Print(const Font* font,const float& x, const float& y,const std::string& message, float fontSize = 1);
 	bool DirectPrint(const Font* font,const  float& x,const float& y,const std::string& message, float fontSize = 1);
