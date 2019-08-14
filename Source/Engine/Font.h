@@ -1,19 +1,15 @@
-#ifndef _Font_
-#define _Font_
-
+#pragma once
 #include <map>
 #include <vector>
 #include <SDL.h>
 
-using namespace std;
-
 class Font {
 public:
-	Font(std::string name, int xSize, int ySize, vector<char> chars);
+	Font(std::string name, int xSize, int ySize, std::vector<char> chars);
 	~Font();
 
 	SDL_Surface* GetImage() const;
-	string GetName() const;
+	std::string GetName() const;
 	int GetXSize() const;
 	void SetXSize(const int& x);
 	int GetYSize() const;
@@ -21,15 +17,13 @@ public:
 	int GetVocabSize()const;
 	int GetCharOffset(char c) const;
 	void SetOnlyCaps(bool value);
-	bool GetOnlyCaps()const;
+	bool IsOnlyCaps()const;
 private:
-	string name;
+	std::string name;
 	int xSize;
 	int ySize;
-	map<char, int> charMap;
+	std::map<char, int> charMap;
 	SDL_Surface* surface=nullptr;
 	bool onlyCaps = true;
 };
-
-#endif // !_Font_
 

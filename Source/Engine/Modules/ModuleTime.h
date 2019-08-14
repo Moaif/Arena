@@ -1,6 +1,4 @@
-#ifndef _MODULETIME_H_
-#define _MODULETIME_H_
-
+#pragma once
 #include "../../Globals.h"
 #include "Module.h"
 
@@ -23,4 +21,3 @@ private:
 	float unscaledDeltaTime;
 	float scale;
 };
-#endif // !_MODULETIME_H_

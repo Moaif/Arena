@@ -1,10 +1,7 @@
-#ifndef __MODULEAUDIO_H__
-#define __MODULEAUDIO_H__
-
+#pragma once
+#include "../../Globals.h"
 #include <vector>
 #include "Module.h"
-
-#define DEFAULT_MUSIC_FADE_TIME 2.0f
 
 struct _Mix_Music;
 struct Mix_Chunk;
@@ -14,7 +11,7 @@ class ModuleAudio : public Module
 {
 public:
 
-	ModuleAudio(bool start_enabled = true);
+	ModuleAudio();
 	~ModuleAudio();
 
 	bool Init()override;
@@ -36,5 +33,3 @@ private:
 	Mix_Music*	music = nullptr;
 	std::vector<Mix_Chunk*>	fx;
 };
-
-#endif // __MODULEAUDIO_H__

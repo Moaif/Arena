@@ -1,10 +1,7 @@
-#ifndef __MODULERENDER_H__
-#define __MODULERENDER_H__
-
+#pragma once
 #include "Module.h"
-#include "../../Globals.h"
-#include "../Vector.h"
 #include <queue>
+#include <memory>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -19,10 +16,19 @@ enum class Layer
 	UI,
 };
 
-struct resizeStruct {
+struct ResizeStruct {
 	int w;
 	int h;
+	ResizeStruct(){}
+	ResizeStruct(int w, int h) : w(w), h(h){}
+
+	bool operator !=(const ResizeStruct& other)
+	{
+		return other.h != h || other.w != w;
+	}
 };
+
+static const ResizeStruct emptyResizeStruct = ResizeStruct(0, 0);
 
 struct BlitStruct
 {
@@ -31,14 +37,20 @@ struct BlitStruct
 	float y;
 	Layer layer;
 	SDL_Rect section;
-	resizeStruct blitSection;
-	bool isSectionValid;
-	bool isBlitSectionValid;
+	ResizeStruct blitSection;
 };
 
-struct CompareDepth {
+struct CompareLayer {
 	bool operator()(BlitStruct const & p1, BlitStruct const & p2) {
 		return p1.layer < p2.layer;
+	}
+};
+
+struct SDLRendererDestroyer
+{
+	void operator()(SDL_Renderer* r) const
+	{
+		SDL_DestroyRenderer(r);
 	}
 };
 
@@ -54,20 +66,17 @@ public:
 	update_status PostUpdate()override;
 	bool CleanUp()override;
 
-	void AddToBlitBuffer(SDL_Texture* texture, const float& x, const float& y, const Layer& layer, SDL_Rect* section, resizeStruct* resizeInfo);
-	bool Blit(SDL_Texture* texture, float x, float y, SDL_Rect* section, resizeStruct* resizeInfo);
+	void AddToBlitBuffer(SDL_Texture* texture, const float& x, const float& y, const Layer& layer, SDL_Rect* section, ResizeStruct* resizeInfo);
+	bool Blit(SDL_Texture* texture, float x, float y, SDL_Rect* section, ResizeStruct* resizeInfo);
 	bool Print(const Font* font,const float& x, const float& y,const std::string& message, float fontSize = 1);
 	bool DirectPrint(const Font* font,const  float& x,const float& y,const std::string& message, float fontSize = 1);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	bool DrawQuads(const SDL_Rect rects[],const int& count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
-public:
-	SDL_Renderer* renderer = nullptr;
-	int nearClippingPlane;
+	SDL_Renderer* GetRenderer()const{return renderer.get();};
 
 private:
 	//Depth buffer
-	std::priority_queue<BlitStruct,std::vector<BlitStruct>,CompareDepth> blitQueue;
+	std::priority_queue<BlitStruct,std::vector<BlitStruct>,CompareLayer> blitQueue;
+	std::unique_ptr<SDL_Renderer,SDLRendererDestroyer> renderer = nullptr;
 };
-
-#endif // __MODULERENDER_H__

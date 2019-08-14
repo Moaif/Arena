@@ -2,6 +2,8 @@
 #include <SDL_image.h>
 #include <ctype.h>
 
+using namespace std;
+
 Font::Font(string name, int xSize, int ySize, vector<char> chars) :
 	name(name), xSize(xSize), ySize(ySize)
 {
@@ -56,6 +58,6 @@ void Font::SetOnlyCaps(bool value) {
 	onlyCaps = value;
 }
 
-bool Font::GetOnlyCaps()const {
+bool Font::IsOnlyCaps()const {
 	return onlyCaps;
 }

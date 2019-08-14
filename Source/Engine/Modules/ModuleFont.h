@@ -1,9 +1,5 @@
-#ifndef _MODULEFONT_H_
-#define _MODULEFONT_H_
-
+#pragma once
 #include "Module.h"
-#include "../../Globals.h"
-#include <iostream>
 #include <map>
 
 class Font;
@@ -44,6 +40,3 @@ private:
 	static const int MAX_CACHE_SIZE_PER_FONT;
 
 };
-
-#endif // !_MODULEFONT_H_
-

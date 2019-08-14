@@ -15,40 +15,38 @@ using namespace std;
 Application::Application()
 {
 	// Order matters: they will init/start/pre/update/post in this order
-	modules.push_back(input = new ModuleInput());
-	modules.push_back(window = new ModuleWindow());
+	modules.push_back((input = std::make_unique<ModuleInput>()).get());
+	modules.push_back((window = std::make_unique <ModuleWindow>()).get());
 
-	modules.push_back(textures = new ModuleTextures());
-	modules.push_back(audio = new ModuleAudio());
-	modules.push_back(time = new ModuleTime());
-	modules.push_back(fonts = new ModuleFont());
-	modules.push_back(collision = new ModuleCollision());
+	modules.push_back((textures = std::make_unique<ModuleTextures>()).get());
+	modules.push_back((audio = std::make_unique<ModuleAudio>()).get());
+	modules.push_back((time = std::make_unique<ModuleTime>()).get());
+	modules.push_back((fonts = std::make_unique<ModuleFont>()).get());
+	modules.push_back((collision = std::make_unique<ModuleCollision>()).get());
 
 	modules.push_back(sega = new ModuleSceneSega());
 
 	//Renderer must be here to draw from buffer after all other modules had request to blit
-	modules.push_back(renderer = new ModuleRender());
+	modules.push_back((renderer = std::make_unique <ModuleRender>()).get());
 
 	//Fade to black is the last one, in order to work properly
-	modules.push_back(fade = new ModuleFadeToBlack());
+	modules.push_back((fade = std::make_unique < ModuleFadeToBlack>()).get());
 
 	playing = false;
 }
 
 Application::~Application()
 {
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
-		RELEASE(*it);
 }
 
 bool Application::Init()
 {
 	bool ret = true;
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init(); // we init everything, even if not anabled
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 	{
 		if((*it)->IsEnabled() == true)
 			ret = (*it)->Start();
@@ -63,18 +61,18 @@ update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		if((*it)->IsEnabled() == true) 
 			ret = (*it)->PreUpdate();
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		if((*it)->IsEnabled() == true) 
 			ret = (*it)->Update();
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		if((*it)->IsEnabled() == true) 
 			ret = (*it)->PostUpdate();
-
+	//TODO move this to a Module which handles the current state
 	//Game pause
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && playing) {
 		App->renderer->PostUpdate();
@@ -99,7 +97,7 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 
-	for(list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+	for(vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		if((*it)->IsEnabled() == true) 
 			ret = (*it)->CleanUp();
 
@@ -109,7 +107,7 @@ bool Application::CleanUp()
 bool Application::Restart()
 {
 	bool ret = true;
-	for (list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+	for (vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 			ret = (*it)->Restart();
 
 	return ret;

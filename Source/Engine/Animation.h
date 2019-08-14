@@ -35,7 +35,7 @@ public:
 				current_frame = RAND() % frames.size();
 			}
 			if (!timeBased) {
-				timer = App->time->GetTimeSinceStart() + (1 / speed);
+				timer = Time->GetTimeSinceStart() + (1 / speed);
 			}
 			first = false;
 		}
@@ -61,7 +61,7 @@ public:
 			}
 			else
 			{
-				timer += speed*App->time->GetDeltaTime();
+				timer += speed*Time->GetDeltaTime();
 			}
 		}
 		else {
@@ -83,7 +83,7 @@ public:
 			}
 			else
 			{
-				timer += speed*App->time->GetUnscaledDeltaTime();
+				timer += speed*Time->GetUnscaledDeltaTime();
 			}
 		}
 

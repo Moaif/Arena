@@ -1,9 +1,6 @@
-#include "../../Globals.h"
 #include "../Application.h"
 #include "ModuleInput.h"
 #include <SDL.h>
-
-#define MAX_KEYS 300
 
 ModuleInput::ModuleInput() : Module(), mouse({0, 0}), mouse_motion({0,0})
 {
@@ -34,13 +31,6 @@ bool ModuleInput::Init()
 	return ret;
 }
 
-// Called before the first frame
-bool ModuleInput::Start()
-{
-	return true;
-}
-
-// Called each loop iteration
 update_status ModuleInput::PreUpdate()
 {
 	static SDL_Event event;

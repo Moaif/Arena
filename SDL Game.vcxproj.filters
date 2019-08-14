@@ -80,7 +80,7 @@
     <ClInclude Include="Source\Engine\Vector.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Component.h" />
+    <ClInclude Include="Source\Engine\Components\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Globals.cpp">

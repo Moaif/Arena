@@ -19,7 +19,7 @@ ModuleFadeToBlack::~ModuleFadeToBlack()
 bool ModuleFadeToBlack::Start()
 {
 	LOG("Preparing Fade Screen");
-	SDL_SetRenderDrawBlendMode(App->renderer->renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawBlendMode(Renderer->GetRenderer(), SDL_BLENDMODE_BLEND);
 	return true;
 }
 
@@ -37,8 +37,8 @@ update_status ModuleFadeToBlack::Update()
 		if(fading_in == false)
 			normalized = 1.0f - normalized;
 
-		SDL_SetRenderDrawColor(App->renderer->renderer, 0, 0, 0, (Uint8) (normalized * 255.0f));
-		SDL_RenderFillRect(App->renderer->renderer, NULL);
+		SDL_SetRenderDrawColor(Renderer->GetRenderer(), 0, 0, 0, (Uint8) (normalized * 255.0f));
+		SDL_RenderFillRect(Renderer->GetRenderer(), NULL);
 
 		if(module_off == nullptr && module_on != nullptr)
 		{
@@ -50,11 +50,11 @@ update_status ModuleFadeToBlack::Update()
 		{
 			if(fading_in == true)
 			{	
-				App->audio->PauseMusic();
+				Audio->PauseMusic();
 				if(module_off != nullptr) 
 					module_off->Disable();
 				module_on->Enable();
-				App->time->SetTimeScale(1);
+				Time->SetTimeScale(1);
 
 				total_time += total_time;
 				start_time = SDL_GetTicks();

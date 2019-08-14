@@ -1,6 +1,6 @@
 #pragma once
-#define _USE_MATH_DEFINES
 #define EPS 1e-9
+#include <SDL_stdinc.h>
 #include <cmath>
 
 class Transform;

@@ -1,6 +1,4 @@
-#ifndef __MODULETEXTURES_H__
-#define __MODULETEXTURES_H__
-
+#pragma once
 #include<list>
 #include "Module.h"
 #include "../../Globals.h"
@@ -22,5 +20,3 @@ public:
 private:
 	std::list<SDL_Texture*> textures;
 };
-
-#endif // __MODULETEXTURES_H__

@@ -1,6 +1,4 @@
-#ifndef __MODULEWINDOW_H__
-#define __MODULEWINDOW_H__
-
+#pragma once
 #include "Module.h"
 
 struct SDL_Window;
@@ -28,5 +26,3 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screen_surface = nullptr;
 };
-
-#endif // __MODULEWINDOW_H__

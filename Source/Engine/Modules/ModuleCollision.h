@@ -1,6 +1,4 @@
-#ifndef __ModuleCollision_H__
-#define __ModuleCollision_H__
-
+#pragma once
 #include<list>
 #include "Module.h"
 #include <SDL.h>
@@ -56,5 +54,3 @@ private:
 	bool debug = false;
 	bool hits[MAXIMO][MAXIMO];
 };
-
-#endif // __ModuleCollision_H__

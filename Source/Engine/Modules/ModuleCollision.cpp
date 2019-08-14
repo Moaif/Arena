@@ -88,7 +88,7 @@ update_status ModuleCollision::Update()
 		}
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if(Input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
 	if(debug == true)
@@ -101,7 +101,7 @@ void ModuleCollision::DebugDraw()
 {
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
 		if ((*it)->active) {
-			App->renderer->DrawQuad((*it)->rect, 255, 0, 0, 80);
+			Renderer->DrawQuad((*it)->rect, 255, 0, 0, 80);
 		}
 }
 
@@ -147,7 +147,7 @@ bool Collider::CheckCollision(const SDL_Rect& r,const float& z,const float& spee
 	}
 
 	//Zcollision
-	float maxSpeed = max(speed,this->speed)*App->time->GetDeltaTime();
+	float maxSpeed = max(speed,this->speed)*Time->GetDeltaTime();
 	if (z < this->z - maxSpeed || z > this->z + maxSpeed) {
 		zHit = false;
 	}

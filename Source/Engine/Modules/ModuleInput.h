@@ -1,12 +1,8 @@
-#ifndef __MODULEINPUT_H__
-#define __MODULEINPUT_H__
-
+#pragma once
+#include "../../Globals.h"
 #include "Module.h"
 #include "../Vector.h"
-
 #include <SDL.h>
-
-#define NUM_MOUSE_BUTTONS 5
 
 enum EventWindow
 {
@@ -31,19 +27,10 @@ public:
 
 	ModuleInput();
 
-	// Destructor
 	virtual ~ModuleInput();
 
-	// Called before render is available
 	bool Init()override;
-
-	// Called before the first frame
-	bool Start()override;
-
-	// Called each loop iteration
 	update_status PreUpdate()override;
-
-	// Called before quitting
 	bool CleanUp()override;
 
 	// Check key states (includes mouse and joy buttons)
@@ -71,5 +58,3 @@ private:
 	iVector mouse_motion;
 	iVector mouse;
 };
-
-#endif // __MODULEINPUT_H__

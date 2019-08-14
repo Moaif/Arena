@@ -1,4 +1,3 @@
-#include "../../Globals.h"
 #include "../Application.h"
 #include "ModuleAudio.h"
 #include <SDL.h>
@@ -6,7 +5,7 @@
 
 using namespace std;
 
-ModuleAudio::ModuleAudio( bool start_enabled) : Module( start_enabled)
+ModuleAudio::ModuleAudio()
 {}
 
 // Destructor
@@ -51,7 +50,7 @@ bool ModuleAudio::CleanUp()
 {
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music != nullptr)
+	if(music)
 	{
 		Mix_FreeMusic(music);
 	}
@@ -72,9 +71,7 @@ bool ModuleAudio::CleanUp()
 // Play a music file
 bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 {
-	bool ret = true;
-
-	if(music != nullptr)
+	if(music)
 	{
 		if(fade_time > 0.0f)
 		{
@@ -94,7 +91,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 	if(music == nullptr)
 	{
 		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-		ret = false;
+		return false;
 	}
 	else
 	{
@@ -103,7 +100,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
 			{
 				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
+				return false;
 			}
 		}
 		else
@@ -111,13 +108,13 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 			if(Mix_PlayMusic(music, -1) < 0)
 			{
 				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
+				return false;
 			}
 		}
 	}
 
 	LOG("Successfully playing %s", path);
-	return ret;
+	return true;
 }
 
 void ModuleAudio::PauseMusic() {

@@ -1,6 +1,4 @@
-#ifndef __MODULEFADETOBLACK_H__
-#define __MODULEFADETOBLACK_H__
-
+#pragma once
 #include "Module.h"
 #include "../../Globals.h"
 
@@ -23,5 +21,3 @@ private:
 	Module* module_on = nullptr;
 	Module* module_off = nullptr;
 };
-
-#endif // __MODULEFADETOBLACK_H__

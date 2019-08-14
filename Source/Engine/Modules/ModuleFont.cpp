@@ -21,7 +21,6 @@ ModuleFont::~ModuleFont() {
 
 bool ModuleFont::Init() {
 	LOG("Loading Fonts");
-	bool ret = true;
 
 	if (!LoadFontRed()) {
 		LOG("Can not load Red font from its path");
@@ -36,16 +35,16 @@ bool ModuleFont::Init() {
 		return false;
 	}
 	if (!LoadFontYellow()) {
-		printf("Can not load Yellow font from its path");
+		LOG("Can not load Yellow font from its path");
 		return false;
 	}
-	return ret;
+	return true;
 }
 
 bool ModuleFont::CleanUp() {
 	LOG("Unloading all fonts");
 	if(!VerifyLinks()){
-		return false;
+		LOG("Some files didn't freed their fonts");
 	}
 	fontMap.clear();
 	links.clear();
@@ -248,7 +247,7 @@ SDL_Texture* ModuleFont::CreateMessage(const Font* font,const string& message) {
 		dstrect.y = 0;
 		SDL_BlitSurface(tempSurface, &srcrect, surfaceFinal, &dstrect);
 	}
-	SDL_Texture* tempTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, surfaceFinal);
+	SDL_Texture* tempTexture = SDL_CreateTextureFromSurface(Renderer->GetRenderer(), surfaceFinal);
 	if (tempTexture == nullptr) {
 		LOG("Unable to create message texture from surface SDL Error: %s\n", SDL_GetError());
 		return nullptr;

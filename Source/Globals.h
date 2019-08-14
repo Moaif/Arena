@@ -1,6 +1,4 @@
-#ifndef __GLOBALS_H__
-#define __GLOBALS_H__
-
+#pragma once
 #include "./Engine/MemLeaks.h"
 #include <SDL.h>
 #include <assert.h>
@@ -58,6 +56,13 @@ typedef unsigned int uint;
 #define VSYNC true
 #define TITLE "Arena"
 
+//Audio
+#define DEFAULT_MUSIC_FADE_TIME 2.0f
+
+//Input
+#define NUM_MOUSE_BUTTONS 5
+#define MAX_KEYS 300
+
 int getPseudoRand();
 int getRand();
 void toFileLog(std::string message);
@@ -69,5 +74,3 @@ void toFileLog(std::string message);
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define AT(message) __FILE__ ":" TOSTRING(__LINE__) " " message
-
-#endif //__GLOBALS_H__

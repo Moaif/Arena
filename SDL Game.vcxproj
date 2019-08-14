@@ -151,7 +151,7 @@
     <ClInclude Include="Source\Engine\Animation.h" />
     <ClInclude Include="Source\Engine\Application.h" />
     <ClInclude Include="Source\Engine\Brofiler.h" />
-    <ClInclude Include="Source\Engine\Component.h" />
+    <ClInclude Include="Source\Engine\Components\Component.h" />
     <ClInclude Include="Source\Engine\Font.h" />
     <ClInclude Include="Source\Engine\GameObject.h" />
     <ClInclude Include="Source\Gameplay\ModuleSceneSega.h" />
