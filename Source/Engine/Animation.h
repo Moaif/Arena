@@ -17,134 +17,132 @@ public:
 	vector<SDL_Rect> frames;
 
 private:
-	int current_frame = 0;
-	int loops = 0;
-	float timer=0;
-	bool first = true;
+	int m_currentFrame = 0;
+	int m_loops = 0;
+	float m_timer=0;
 
 public:
 	Animation()
 	{}
 
-	Animation(const Animation& anim) : loop(anim.loop), speed(anim.speed), frames(anim.frames),randFrame(anim.randFrame)
+	Animation(const Animation& anim) : loop(anim.loop), randFrame(anim.randFrame), timeBased(anim.timeBased),
+	inversed(anim.inversed), speed(anim.speed), frames(anim.frames)
 	{}
 
+	void Start()
+	{
+		Reset();
+	}
+
 	void Update() {
-		if (first) {
-			if (randFrame) {
-				current_frame = RAND() % frames.size();
-			}
-			if (!timeBased) {
-				timer = Time->GetTimeSinceStart() + (1 / speed);
-			}
-			first = false;
-		}
-
-		int last_frame = frames.size();
-
-		if (timeBased) {
-			if (timer >= 1) {
-				if (randFrame) {
-					current_frame = RAND() % frames.size();
-				}
-				else
-				{
-					if (inversed) {
-						--current_frame;
-					}
-					else
-					{
-						++current_frame;
-					}
-				}
-				timer = 0;
-			}
-			else
-			{
-				timer += speed*Time->GetDeltaTime();
-			}
-		}
-		else {
-			if (timer >= 1) {
-				if (randFrame) {
-					current_frame = RAND() % frames.size();
-				}
-				else
-				{
-					if (inversed) {
-						--current_frame;
-					}
-					else
-					{
-						++current_frame;
-					}
-				}
-				timer = 0;
-			}
-			else
-			{
-				timer += speed*Time->GetUnscaledDeltaTime();
-			}
-		}
-
-		if (current_frame >= last_frame)
+		if(m_timer >= 1)
 		{
-			current_frame = (loop) ? 0 : MAX(last_frame - 1, 0);
-			loops++;
+			SetNextFrame();
+			m_timer = 0;
 		}
-
-		if (current_frame < 0) {
-			current_frame = (loop) ? MAX(last_frame - 1, 0) : 0;
-			loops++;
+		
+		if(timeBased)
+		{
+			m_timer += speed * Time->GetDeltaTime();
 		}
+		else
+		{
+			m_timer += speed * Time->GetUnscaledDeltaTime();
+		}
+		
 	}
 
 	SDL_Rect& GetCurrentFrame()
 	{
-		return frames[current_frame];
+		return frames[m_currentFrame];
 	}
 
 	bool Finished() const
 	{
-		return loops > 0;
+		return m_loops > 0;
 	}
 
 	void Reset()
 	{
-		if (inversed) {
-			current_frame = MAX(frames.size()-1,0);
+		if(randFrame)
+		{
+			m_currentFrame = RAND() % frames.size();
 		}
-		else {
-			current_frame = 0;
+		else if(inversed)
+		{
+			m_currentFrame = MAX(frames.size() - 1, 0);
 		}
-		loops = 0;
-		timer = 0;
-		first = true;
+		else
+		{
+			m_currentFrame = 0;
+		}
+		//TODO: Verify
+		//if(!timeBased)
+		//{
+		//	m_timer = Time->GetTimeSinceStart() + (1 / speed);
+		//}
+		m_loops = 0;
+		m_timer = 0;
 	}
 
 	const SDL_Rect& GetCurrentFrameConst() const{
-		return frames[current_frame];
+		return frames[m_currentFrame];
 	}
 
 	void SetNextFrame() {
-		if (inversed) {
-			current_frame = (current_frame - 1)+frames.size() % frames.size();
+		if(randFrame)
+		{
+			m_currentFrame = RAND() % frames.size();
 		}
-		else {
-			current_frame = (current_frame + 1) % frames.size();
+		else
+		{
+			if(inversed)
+			{
+				--m_currentFrame;
+			}
+			else
+			{
+				++m_currentFrame;
+			}
+			VerifyEndOfAnimation();
 		}
 	}
 
 	void SetPreviousFrame() {
-		if (inversed) {
-			current_frame = (current_frame + 1) % frames.size();
+		if(randFrame)
+		{
+			m_currentFrame = RAND() % frames.size();
 		}
-		else {
-			current_frame = (current_frame - 1) + frames.size() % frames.size();
+		else
+		{
+			if(inversed)
+			{
+				++m_currentFrame;
+			}
+			else
+			{
+				--m_currentFrame;
+			}
+			VerifyEndOfAnimation();
+		}
+	}
+
+	void VerifyEndOfAnimation()
+	{
+		int lastFrame = frames.size();
+		if (m_currentFrame >= lastFrame)
+		{
+			m_currentFrame = (loop) ? 0 : MAX(lastFrame - 1, 0);
+			m_loops++;
+		}
+
+		if (m_currentFrame < 0) {
+			m_currentFrame = (loop) ? MAX(lastFrame - 1, 0) : 0;
+			m_loops++;
 		}
 	}
 
 	int GetCurrentFrameIndex()const {
-		return current_frame;
+		return m_currentFrame;
 	}
 };

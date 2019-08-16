@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include <queue>
-#include <memory>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -46,14 +45,6 @@ struct CompareLayer {
 	}
 };
 
-struct SDLRendererDestroyer
-{
-	void operator()(SDL_Renderer* r) const
-	{
-		SDL_DestroyRenderer(r);
-	}
-};
-
 class ModuleRender : public Module
 {
 public:
@@ -64,7 +55,7 @@ public:
 	update_status PreUpdate()override;
 	update_status Update()override;
 	update_status PostUpdate()override;
-	bool CleanUp()override;
+	bool CleanUp() override;
 
 	void AddToBlitBuffer(SDL_Texture* texture, const float& x, const float& y, const Layer& layer, SDL_Rect* section, ResizeStruct* resizeInfo);
 	bool Blit(SDL_Texture* texture, float x, float y, SDL_Rect* section, ResizeStruct* resizeInfo);
@@ -73,10 +64,10 @@ public:
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	bool DrawQuads(const SDL_Rect rects[],const int& count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
-	SDL_Renderer* GetRenderer()const{return renderer.get();};
+	SDL_Renderer* GetRenderer()const{return m_renderer;};
 
 private:
 	//Depth buffer
-	std::priority_queue<BlitStruct,std::vector<BlitStruct>,CompareLayer> blitQueue;
-	std::unique_ptr<SDL_Renderer,SDLRendererDestroyer> renderer = nullptr;
+	std::priority_queue<BlitStruct,std::vector<BlitStruct>,CompareLayer> m_blitQueue;
+	SDL_Renderer* m_renderer = nullptr;
 };

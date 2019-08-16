@@ -33,10 +33,10 @@ private:
 	SDL_Texture* CreateMessage(const Font* font,const std::string& message);
 
 private:
-	std::map<std::string, Font*> fontMap;
-	std::map<const Font*, std::map<std::string, std::map<int, bool>>> links;
-	std::map <const Font*, std::map<std::string, CacheInfo>> messageCache;
+	std::map<std::string, Font*> m_fontMap;
+	std::map<const Font*, std::map<std::string, std::map<int, bool>>> m_links;
+	std::map <const Font*, std::map<std::string, CacheInfo>> m_messageCache;
+
 	static const int MAX_TIME_TO_LIVE;
 	static const int MAX_CACHE_SIZE_PER_FONT;
-
 };

@@ -46,14 +46,14 @@ bool ModuleFont::CleanUp() {
 	if(!VerifyLinks()){
 		LOG("Some files didn't freed their fonts");
 	}
-	fontMap.clear();
-	links.clear();
-	messageCache.clear();
+	m_fontMap.clear();
+	m_links.clear();
+	m_messageCache.clear();
 	return true;
 }
 
 update_status ModuleFont::PreUpdate() {
-	for (map<const Font*, map<string, CacheInfo>>::iterator it = messageCache.begin(); it != messageCache.end(); ++it) {
+	for (map<const Font*, map<string, CacheInfo>>::iterator it = m_messageCache.begin(); it != m_messageCache.end(); ++it) {
 		for (map<string, CacheInfo>::iterator it2 = (*it).second.begin(), next_it2= (*it).second.begin(); it2 != (*it).second.end(); it2 = next_it2) {
 			next_it2 = it2;
 			++next_it2;
@@ -72,9 +72,9 @@ update_status ModuleFont::PreUpdate() {
 
 
 const Font* ModuleFont::GetFont(const string& fontName, const string& file,const int& line) {
-	if (fontMap.count(fontName)) {
-		links[fontMap[fontName]][file][line] = true;
-		return fontMap[fontName];
+	if (m_fontMap.count(fontName)) {
+		m_links[m_fontMap[fontName]][file][line] = true;
+		return m_fontMap[fontName];
 	}
 	LOG("Error, there is no %s in our database", fontName.c_str());
 	return nullptr;
@@ -85,8 +85,8 @@ void ModuleFont::FreeFont(const Font ** p,const string& file,const int& line) {
 
 	ASSERT(*p != nullptr, AT("FreeFont received a null *Font"));
 
-	map<const Font*, map<string, map<int, bool>>>::iterator it = links.find(*p);
-	if (it != links.end()) {
+	map<const Font*, map<string, map<int, bool>>>::iterator it = m_links.find(*p);
+	if (it != m_links.end()) {
 		map<string, map<int, bool>>::iterator it2 = (*it).second.find(file);
 		if (it2 != (*it).second.end()) {
 			map<int, bool>::iterator it3 = (*it2).second.find(line);
@@ -102,10 +102,10 @@ bool ModuleFont::VerifyLinks() {
 
 	bool ret = true;
 
-	for (map<string, Font*>::iterator it = fontMap.begin(); it != fontMap.end(); ++it) {
+	for (map<string, Font*>::iterator it = m_fontMap.begin(); it != m_fontMap.end(); ++it) {
 
 
-		for (map<string, map<int, bool>>::iterator it2 = links[it->second].begin(); it2 != links[it->second].end(); ++it2) {
+		for (map<string, map<int, bool>>::iterator it2 = m_links[it->second].begin(); it2 != m_links[it->second].end(); ++it2) {
 			for (map<int, bool>::iterator it3 = it2->second.begin(); it3 != it2->second.end(); ++it3) {
 				if (it3->second) {
 					string err= "La font " + it->first + " no se pudo liberar por el fichero " + it2->first + " linea %d";
@@ -125,9 +125,9 @@ SDL_Texture* ModuleFont::GetMessage(const Font* font,const string& message) {
 	ASSERT(font != nullptr,AT("Font parameter was received as null"));
 
 	//First we search if the message is in cache
-	if (!messageCache.empty()) {
-		map<const Font*, map<string, CacheInfo>>::iterator tempIt = messageCache.find(font);
-		if (tempIt != messageCache.end()) {
+	if (!m_messageCache.empty()) {
+		map<const Font*, map<string, CacheInfo>>::iterator tempIt = m_messageCache.find(font);
+		if (tempIt != m_messageCache.end()) {
 			if (!(*tempIt).second.empty()) {
 				map<string, CacheInfo>::iterator tempIt2 = (*tempIt).second.find(message);
 				if (tempIt2 != (*tempIt).second.end()) {
@@ -141,10 +141,10 @@ SDL_Texture* ModuleFont::GetMessage(const Font* font,const string& message) {
 	//If we dont fint it, we made it
 	SDL_Texture* temp = CreateMessage(font,message);
 	ASSERT(temp != nullptr,AT("Failed on creating new message texture"));
-	if (messageCache[font].size() > MAX_CACHE_SIZE_PER_FONT) {//Cache full case
+	if (m_messageCache[font].size() > MAX_CACHE_SIZE_PER_FONT) {//Cache full case
 		int minTtl= MAX_TIME_TO_LIVE+1;
 		string messageToRemove="";
-		for (map<string, CacheInfo>::iterator it = messageCache[font].begin(); it != messageCache[font].end(); ++it) {
+		for (map<string, CacheInfo>::iterator it = m_messageCache[font].begin(); it != m_messageCache[font].end(); ++it) {
 			if ((*it).second.timeToLive < minTtl) {
 				minTtl = (*it).second.timeToLive;
 				messageToRemove = (*it).first;
@@ -153,13 +153,13 @@ SDL_Texture* ModuleFont::GetMessage(const Font* font,const string& message) {
 		//Error
 		ASSERT(messageToRemove != "",AT("Could not find any space to allocate the new message"));
 
-		SDL_DestroyTexture(messageCache[font][messageToRemove].texture);
-		messageCache[font][messageToRemove].texture=nullptr;
-		messageCache[font].erase(messageCache[font].find(messageToRemove));
-		messageCache[font][message] = { temp,MAX_TIME_TO_LIVE };
+		SDL_DestroyTexture(m_messageCache[font][messageToRemove].texture);
+		m_messageCache[font][messageToRemove].texture=nullptr;
+		m_messageCache[font].erase(m_messageCache[font].find(messageToRemove));
+		m_messageCache[font][message] = { temp,MAX_TIME_TO_LIVE };
 	}
 	else {
-		messageCache[font][message] = { temp,MAX_TIME_TO_LIVE };
+		m_messageCache[font][message] = { temp,MAX_TIME_TO_LIVE };
 	}
 
 	return temp;
@@ -174,7 +174,7 @@ bool ModuleFont::LoadFontRed() {
 	if (font->GetImage() == nullptr) {
 		return false;
 	}
-	fontMap[fontName] = font;
+	m_fontMap[fontName] = font;
 	return true;
 }
 bool ModuleFont::LoadFontBlue() {
@@ -186,7 +186,7 @@ bool ModuleFont::LoadFontBlue() {
 	if (font->GetImage() == nullptr) {
 		return false;
 	}
-	fontMap[fontName] = font;
+	m_fontMap[fontName] = font;
 	return true;
 }
 
@@ -199,7 +199,7 @@ bool ModuleFont::LoadFontGreen() {
 	if (font->GetImage() == nullptr) {
 		return false;
 	}
-	fontMap[fontName] = font;
+	m_fontMap[fontName] = font;
 	return true;
 }
 
@@ -212,7 +212,7 @@ bool ModuleFont::LoadFontYellow() {
 	if (font->GetImage() == nullptr) {
 		return false;
 	}
-	fontMap[fontName] = font;
+	m_fontMap[fontName] = font;
 	return true;
 }
 

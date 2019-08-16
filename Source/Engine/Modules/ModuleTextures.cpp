@@ -4,7 +4,6 @@
 #include "ModuleTextures.h"
 #include <SDL.h>
 #include <SDL_image.h>
-//#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 
 using namespace std;
 
@@ -12,17 +11,14 @@ ModuleTextures::ModuleTextures()
 {
 }
 
-// Destructor
 ModuleTextures::~ModuleTextures()
 {
 	IMG_Quit();
 }
 
-// Called before render is available
 bool ModuleTextures::Init()
 {
 	LOG("Init Image library");
-	bool ret = true;
 
 	// load support for the PNG image format
 	int flags = IMG_INIT_PNG;
@@ -31,10 +27,10 @@ bool ModuleTextures::Init()
 	if((init & flags) != flags)
 	{
 		LOG("Could not initialize Image lib. IMG_Init: %s", IMG_GetError());
-		ret = false;
+		return false;
 	}
 
-	return ret;
+	return true;
 }
 
 // Called before quitting
@@ -42,10 +38,10 @@ bool ModuleTextures::CleanUp()
 {
 	LOG("Freeing textures and Image library");
 
-	for(list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
+	for(list<SDL_Texture*>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
 		SDL_DestroyTexture(*it);
 
-	textures.clear();
+	m_textures.clear();
 	return true;
 }
 
@@ -69,7 +65,7 @@ SDL_Texture* const ModuleTextures::Load(const char* path)
 		}
 		else
 		{
-			textures.push_back(texture);
+			m_textures.push_back(texture);
 		}
 
 		SDL_FreeSurface(surface);
@@ -81,12 +77,12 @@ SDL_Texture* const ModuleTextures::Load(const char* path)
 // Free texture from memory
 void ModuleTextures::Unload(SDL_Texture* texture)
 {
-	for(list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
+	for(list<SDL_Texture*>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
 	{
 		if(*it == texture)
 		{
 			SDL_DestroyTexture(*it);
-			textures.erase(it);
+			m_textures.erase(it);
 			break;
 		}
 	}

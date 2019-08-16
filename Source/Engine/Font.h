@@ -19,11 +19,11 @@ public:
 	void SetOnlyCaps(bool value);
 	bool IsOnlyCaps()const;
 private:
-	std::string name;
-	int xSize;
-	int ySize;
-	std::map<char, int> charMap;
-	SDL_Surface* surface=nullptr;
-	bool onlyCaps = true;
+	std::string m_name;
+	int m_xSize;
+	int m_ySize;
+	std::map<char, int> m_charMap;
+	SDL_Surface* m_surface=nullptr;
+	bool m_onlyCaps = true;
 };
 

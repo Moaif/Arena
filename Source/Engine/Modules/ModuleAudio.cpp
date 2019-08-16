@@ -50,16 +50,16 @@ bool ModuleAudio::CleanUp()
 {
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music)
+	if(m_music)
 	{
-		Mix_FreeMusic(music);
+		Mix_FreeMusic(m_music);
 	}
 
-	for (vector<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); ++it) {
+	for (vector<Mix_Chunk*>::iterator it = m_fx.begin(); it != m_fx.end(); ++it) {
 		Mix_FreeChunk(*it);
 	}
 
-	fx.clear();
+	m_fx.clear();
 	Mix_CloseAudio();
 	while (Mix_Init(0)) {
 		Mix_Quit();
@@ -71,7 +71,7 @@ bool ModuleAudio::CleanUp()
 // Play a music file
 bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 {
-	if(music)
+	if(m_music)
 	{
 		if(fade_time > 0.0f)
 		{
@@ -83,12 +83,12 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 		}
 
 		// this call blocks until fade out is done
-		Mix_FreeMusic(music);
+		Mix_FreeMusic(m_music);
 	}
 
-	music = Mix_LoadMUS(path);
+	m_music = Mix_LoadMUS(path);
 
-	if(music == nullptr)
+	if(m_music == nullptr)
 	{
 		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
 		return false;
@@ -97,7 +97,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 	{
 		if(fade_time > 0.0f)
 		{
-			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
+			if(Mix_FadeInMusic(m_music, -1, (int) (fade_time * 1000.0f)) < 0)
 			{
 				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				return false;
@@ -105,7 +105,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 		}
 		else
 		{
-			if(Mix_PlayMusic(music, -1) < 0)
+			if(Mix_PlayMusic(m_music, -1) < 0)
 			{
 				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				return false;
@@ -133,8 +133,8 @@ unsigned int ModuleAudio::LoadFx(const char* path)
 	}
 	else
 	{
-		fx.push_back(chunk);
-		ret = fx.size() - 1;
+		m_fx.push_back(chunk);
+		ret = m_fx.size() - 1;
 	}
 
 	return ret;
@@ -145,9 +145,9 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	if(id < fx.size())
+	if(id < m_fx.size())
 	{
-		Mix_PlayChannel(-1, fx[id], repeat);
+		Mix_PlayChannel(-1, m_fx[id], repeat);
 		ret = true;
 	}
 

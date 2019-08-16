@@ -8,7 +8,7 @@ class Module
 {
 public:
 
-	Module(bool active = true) : active(active)
+	Module(bool active = true) : m_active(active)
 	{}
 
 	virtual ~Module()
@@ -16,21 +16,21 @@ public:
 
 	bool IsEnabled() const
 	{
-		return active;
+		return m_active;
 	}
 
 	 bool Enable()
 	{
-		if(active == false)
-			return active = Start();
+		if(m_active == false)
+			return m_active = Start();
 
 		return true;
 	}
 
 	 bool Disable()
 	 {
-		 if(active == true)
-			 return active = !CleanUp();
+		 if(m_active == true)
+			 return m_active = !CleanUp();
 
 		 return true;
 	 }
@@ -72,7 +72,7 @@ public:
 
 
 private:
-	bool active = true;
+	bool m_active = true;
 };
 
 #endif // __MODULE_H__

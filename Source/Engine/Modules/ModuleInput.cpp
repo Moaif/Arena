@@ -2,17 +2,17 @@
 #include "ModuleInput.h"
 #include <SDL.h>
 
-ModuleInput::ModuleInput() : Module(), mouse({0, 0}), mouse_motion({0,0})
+ModuleInput::ModuleInput() : Module(), m_mouse({0, 0}), m_mouse_motion({0,0})
 {
-	keyboard = new KeyState[MAX_KEYS];
-	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
-	memset(mouse_buttons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
+	m_keyboard = new KeyState[MAX_KEYS];
+	memset(m_keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
+	memset(m_mouse_buttons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 }
 
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	RELEASE_ARRAY(keyboard);
+	RELEASE_ARRAY(m_keyboard);
 }
 
 // Called before render is available
@@ -35,8 +35,8 @@ update_status ModuleInput::PreUpdate()
 {
 	static SDL_Event event;
 
-	mouse_motion = {0, 0};
-	memset(windowEvents, false, WE_COUNT * sizeof(bool));
+	m_mouse_motion = {0, 0};
+	memset(m_windowEvents, false, WE_COUNT * sizeof(bool));
 	
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
@@ -44,27 +44,27 @@ update_status ModuleInput::PreUpdate()
 	{
 		if(keys[i] == 1)
 		{
-			if(keyboard[i] == KEY_IDLE)
-				keyboard[i] = KEY_DOWN;
+			if(m_keyboard[i] == KEY_IDLE)
+				m_keyboard[i] = KEY_DOWN;
 			else
-				keyboard[i] = KEY_REPEAT;
+				m_keyboard[i] = KEY_REPEAT;
 		}
 		else
 		{
-			if(keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
-				keyboard[i] = KEY_UP;
+			if(m_keyboard[i] == KEY_REPEAT || m_keyboard[i] == KEY_DOWN)
+				m_keyboard[i] = KEY_UP;
 			else
-				keyboard[i] = KEY_IDLE;
+				m_keyboard[i] = KEY_IDLE;
 		}
 	}
 
 	for(int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{
-		if(mouse_buttons[i] == KEY_DOWN)
-			mouse_buttons[i] = KEY_REPEAT;
+		if(m_mouse_buttons[i] == KEY_DOWN)
+			m_mouse_buttons[i] = KEY_REPEAT;
 
-		if(mouse_buttons[i] == KEY_UP)
-			mouse_buttons[i] = KEY_IDLE;
+		if(m_mouse_buttons[i] == KEY_UP)
+			m_mouse_buttons[i] = KEY_IDLE;
 	}
 
 	while(SDL_PollEvent(&event) != 0)
@@ -72,7 +72,7 @@ update_status ModuleInput::PreUpdate()
 		switch(event.type)
 		{
 			case SDL_QUIT:
-				windowEvents[WE_QUIT] = true;
+				m_windowEvents[WE_QUIT] = true;
 			break;
 
 			case SDL_WINDOWEVENT:
@@ -82,7 +82,7 @@ update_status ModuleInput::PreUpdate()
 					case SDL_WINDOWEVENT_HIDDEN:
 					case SDL_WINDOWEVENT_MINIMIZED:
 					case SDL_WINDOWEVENT_FOCUS_LOST:
-					windowEvents[WE_HIDE] = true;
+					m_windowEvents[WE_HIDE] = true;
 					break;
 
 					//case SDL_WINDOWEVENT_ENTER:
@@ -90,24 +90,24 @@ update_status ModuleInput::PreUpdate()
 					case SDL_WINDOWEVENT_FOCUS_GAINED:
 					case SDL_WINDOWEVENT_MAXIMIZED:
 					case SDL_WINDOWEVENT_RESTORED:
-					windowEvents[WE_SHOW] = true;
+					m_windowEvents[WE_SHOW] = true;
 					break;
 				}
 			break;
 
 			case SDL_MOUSEBUTTONDOWN:
-				mouse_buttons[event.button.button - 1] = KEY_DOWN;
+				m_mouse_buttons[event.button.button - 1] = KEY_DOWN;
 			break;
 
 			case SDL_MOUSEBUTTONUP:
-				mouse_buttons[event.button.button - 1] = KEY_UP;
+				m_mouse_buttons[event.button.button - 1] = KEY_UP;
 			break;
 
 			case SDL_MOUSEMOTION:
-				mouse_motion.x = event.motion.xrel;
-				mouse_motion.y = event.motion.yrel;
-				mouse.x = event.motion.x;
-				mouse.y = event.motion.y;
+				m_mouse_motion.x = event.motion.xrel;
+				m_mouse_motion.y = event.motion.yrel;
+				m_mouse.x = event.motion.x;
+				m_mouse.y = event.motion.y;
 			break;
 		}
 	}
@@ -129,15 +129,15 @@ bool ModuleInput::CleanUp()
 // ---------
 bool ModuleInput::GetWindowEvent(EventWindow ev) const
 {
-	return windowEvents[ev];
+	return m_windowEvents[ev];
 }
 
 const iVector& ModuleInput::GetMousePosition() const
 {
-	return mouse;
+	return m_mouse;
 }
 
 const iVector& ModuleInput::GetMouseMotion() const
 {
-	return mouse_motion;
+	return m_mouse_motion;
 }

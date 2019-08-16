@@ -3,25 +3,24 @@
 #include "ModuleWindow.h"
 #include <SDL.h>
 
+using namespace std;
+
 ModuleWindow::ModuleWindow()
 {
 }
 
-// Destructor
 ModuleWindow::~ModuleWindow()
 {
 }
 
-// Called before render is available
 bool ModuleWindow::Init()
 {
 	LOG("Init SDL window & surface");
-	bool ret = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
+		return false;
 	}
 	else
 	{
@@ -35,35 +34,27 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		m_window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
-		if(window == nullptr)
+		if(m_window == nullptr)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-			ret = false;
-		}
-		else
-		{
-			//Get window surface
-			screen_surface = SDL_GetWindowSurface(window);
+			return false;
 		}
 	}
 
-	return ret;
+	return true;
 }
 
-// Called before quitting
 bool ModuleWindow::CleanUp()
 {
-	LOG("Destroying SDL window and quitting all SDL systems");
+	LOG("Destroying window and quitting all SDL systems");
 
-	//Destroy window
-	if(window != nullptr)
+	if(m_window)
 	{
-		SDL_DestroyWindow(window);
+		SDL_DestroyWindow(m_window);
 	}
 
-	//Quit SDL subsystems
 	SDL_Quit();
 	return true;
 }

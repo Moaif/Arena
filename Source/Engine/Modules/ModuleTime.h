@@ -16,8 +16,8 @@ public:
 	float GetTimeSinceStart()const;
 	float GetTimeScale()const;
 private:
-	float previousTicks;
-	float deltaTime;
-	float unscaledDeltaTime;
-	float scale;
+	float m_previousTicks;
+	float m_deltaTime;
+	float m_unscaledDeltaTime;
+	float m_scale;
 };

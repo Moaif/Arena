@@ -9,20 +9,13 @@ class ModuleWindow : public Module
 public:
 
 	ModuleWindow();
-
-	// Destructor
 	virtual ~ModuleWindow();
 
-	// Called before quitting
 	bool Init()override;
-
-	// Called before quitting
 	bool CleanUp()override;
 
-public:
-	//The window we'll be rendering to
-	SDL_Window* window = nullptr;
+	SDL_Window* GetWindow() const{return m_window;};
 
-	//The surface contained by the window
-	SDL_Surface* screen_surface = nullptr;
+private:
+	SDL_Window* m_window = nullptr;
 };

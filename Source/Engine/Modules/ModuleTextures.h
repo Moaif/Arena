@@ -1,7 +1,6 @@
 #pragma once
 #include<list>
 #include "Module.h"
-#include "../../Globals.h"
 
 struct SDL_Texture;
 
@@ -18,5 +17,5 @@ public:
 	void Unload(SDL_Texture* texture);
 
 private:
-	std::list<SDL_Texture*> textures;
+	std::list<SDL_Texture*> m_textures;
 };

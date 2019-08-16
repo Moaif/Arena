@@ -30,9 +30,9 @@ bool ModuleRender::Init()
 		flags |= SDL_RENDERER_PRESENTVSYNC;
 	}
 
-	renderer = unique_ptr<SDL_Renderer,SDLRendererDestroyer>(SDL_CreateRenderer(Window->window, -1, flags));
+	m_renderer = SDL_CreateRenderer(Window->GetWindow(), -1, flags);
 	
-	if(renderer == nullptr)
+	if(m_renderer == nullptr)
 	{
 		LOG("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
 		return false;
@@ -43,19 +43,19 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
-	SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(renderer.get());
+	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(m_renderer);
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleRender::Update()
 {
-	while (!blitQueue.empty())
+	while (!m_blitQueue.empty())
 	{
-		BlitStruct temp = blitQueue.top();
+		BlitStruct temp = m_blitQueue.top();
 		Blit(temp.texture, temp.x, temp.y, &temp.section, &temp.blitSection);
 
-		blitQueue.pop();
+		m_blitQueue.pop();
 	}
 	return UPDATE_CONTINUE;
 }
@@ -65,19 +65,17 @@ update_status ModuleRender::PostUpdate()
 	#ifdef _DEBUG
 		BROFILER_CATEGORY("Render", Profiler::Color::Orchid)
 	#endif // _DEBUG
-	SDL_RenderPresent(renderer.get());
+	SDL_RenderPresent(m_renderer);
 	return UPDATE_CONTINUE;
 }
 
-// Called before quitting
 bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
 
-	//Destroy window
-	if(renderer)
+	if(m_renderer)
 	{
-		SDL_DestroyRenderer(renderer.get());
+		SDL_DestroyRenderer(m_renderer);
 	}
 
 	return true;
@@ -101,7 +99,7 @@ void ModuleRender::AddToBlitBuffer(SDL_Texture* texture,const float& x,const flo
 	BlitStruct temp;
 	temp = { texture,x,y,layer,rect,resize };
 	
-	blitQueue.push(temp);
+	m_blitQueue.push(temp);
 }
 
 // Blit to screen
@@ -133,7 +131,7 @@ bool ModuleRender::Blit(SDL_Texture* texture,float x,float y, SDL_Rect* section,
 	rect.x =static_cast<int>(x - (rect.w / 2));
 	rect.y = static_cast<int>(y - (rect.h / 2));
 
-	if(SDL_RenderCopy(renderer.get(), texture, section, &rect) != 0)
+	if(SDL_RenderCopy(m_renderer, texture, section, &rect) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		return false;
@@ -196,10 +194,10 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	tempRect.h = rect.h;
 
 
-	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
+	SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
 
-	if (SDL_RenderFillRect(renderer.get(), &tempRect) != 0)
+	if (SDL_RenderFillRect(m_renderer, &tempRect) != 0)
 	{
 		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
 		return false;
@@ -210,10 +208,10 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 
 bool ModuleRender::DrawQuads(const SDL_Rect rects[],const int& count, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-	SDL_SetRenderDrawBlendMode(renderer.get(), SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
+	SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
 
-	if (SDL_RenderFillRects(renderer.get(), rects, count) != 0)
+	if (SDL_RenderFillRects(m_renderer, rects, count) != 0)
 	{
 		LOG("Cannot draw quad to screen. SDL_RenderFillRects error: %s", SDL_GetError());
 		return false;

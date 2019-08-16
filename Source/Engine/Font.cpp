@@ -5,59 +5,59 @@
 using namespace std;
 
 Font::Font(string name, int xSize, int ySize, vector<char> chars) :
-	name(name), xSize(xSize), ySize(ySize)
+	m_name(name), m_xSize(xSize), m_ySize(ySize)
 {
 	string path = "assets/fonts/" + name + ".png";
-	surface = IMG_Load(path.c_str());
+	m_surface = IMG_Load(path.c_str());
 	int index = 0;
 	for (vector<char>::iterator it = chars.begin(); it != chars.end(); ++it) {
-		charMap[(char)*it] = index;
+		m_charMap[(char)*it] = index;
 		++index;
 	}
 }
 
 Font::~Font() {
-	SDL_FreeSurface(surface);
-	charMap.clear();
+	SDL_FreeSurface(m_surface);
+	m_charMap.clear();
 }
 
 SDL_Surface* Font::GetImage() const {
-	return surface;
+	return m_surface;
 }
 
 string Font::GetName() const {
-	return name;
+	return m_name;
 }
 
 int Font::GetXSize() const {
-	return xSize;
+	return m_xSize;
 }
 void Font::SetXSize(const int& x) {
-	xSize = x;
+	m_xSize = x;
 }
 int Font::GetYSize() const {
-	return ySize;
+	return m_ySize;
 }
 void Font::SetYSize(const int& y) {
-	ySize = y;
+	m_ySize = y;
 }
 
 int Font::GetVocabSize()const {
-	return charMap.size();
+	return m_charMap.size();
 }
 
 int Font::GetCharOffset(char c) const {
-	if (onlyCaps) {
+	if (m_onlyCaps) {
 		c=toupper(c);
 		
 	}
-	return charMap.at(c);
+	return m_charMap.at(c);
 }
 
 void Font::SetOnlyCaps(bool value) {
-	onlyCaps = value;
+	m_onlyCaps = value;
 }
 
 bool Font::IsOnlyCaps()const {
-	return onlyCaps;
+	return m_onlyCaps;
 }

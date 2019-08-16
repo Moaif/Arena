@@ -29,7 +29,6 @@ public:
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
 private:
-
-	Mix_Music*	music = nullptr;
-	std::vector<Mix_Chunk*>	fx;
+	Mix_Music*	m_music = nullptr;
+	std::vector<Mix_Chunk*>	m_fx;
 };

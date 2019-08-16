@@ -15,22 +15,22 @@ using namespace std;
 Application::Application()
 {
 	// Order matters: they will init/start/pre/update/post in this order
-	modules.push_back((input = std::make_unique<ModuleInput>()).get());
-	modules.push_back((window = std::make_unique <ModuleWindow>()).get());
+	modules.push_back((m_input = std::make_unique<ModuleInput>()).get());
+	modules.push_back((m_window = std::make_unique <ModuleWindow>()).get());
 
-	modules.push_back((textures = std::make_unique<ModuleTextures>()).get());
-	modules.push_back((audio = std::make_unique<ModuleAudio>()).get());
-	modules.push_back((time = std::make_unique<ModuleTime>()).get());
-	modules.push_back((fonts = std::make_unique<ModuleFont>()).get());
-	modules.push_back((collision = std::make_unique<ModuleCollision>()).get());
+	modules.push_back((m_textures = std::make_unique<ModuleTextures>()).get());
+	modules.push_back((m_audio = std::make_unique<ModuleAudio>()).get());
+	modules.push_back((m_time = std::make_unique<ModuleTime>()).get());
+	modules.push_back((m_fonts = std::make_unique<ModuleFont>()).get());
+	modules.push_back((m_collision = std::make_unique<ModuleCollision>()).get());
 
 	modules.push_back(sega = new ModuleSceneSega());
 
 	//Renderer must be here to draw from buffer after all other modules had request to blit
-	modules.push_back((renderer = std::make_unique <ModuleRender>()).get());
+	modules.push_back((m_renderer = std::make_unique <ModuleRender>()).get());
 
 	//Fade to black is the last one, in order to work properly
-	modules.push_back((fade = std::make_unique < ModuleFadeToBlack>()).get());
+	modules.push_back((m_fade = std::make_unique < ModuleFadeToBlack>()).get());
 
 	playing = false;
 }
@@ -52,7 +52,7 @@ bool Application::Init()
 			ret = (*it)->Start();
 	}
 
-	fade->FadeToBlack(sega, nullptr, 3.0f);
+	m_fade->FadeToBlack(sega, nullptr, 3.0f);
 
 	return ret;
 }
@@ -74,16 +74,16 @@ update_status Application::Update()
 			ret = (*it)->PostUpdate();
 	//TODO move this to a Module which handles the current state
 	//Game pause
-	if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && playing) {
-		App->renderer->PostUpdate();
+	if (m_input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && playing) {
+		App->m_renderer->PostUpdate();
 		while (true)
 		{
-			time->PreUpdate();//In order to not stack aditional time on deltaTime
+			m_time->PreUpdate();//In order to not stack aditional time on deltaTime
 			//Print pause over the render on interval
-			if (input->PreUpdate() == UPDATE_STOP) {
+			if (m_input->PreUpdate() == UPDATE_STOP) {
 				return UPDATE_STOP;
 			 }
-			if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
+			if (m_input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
 				break;
 			}
 		}

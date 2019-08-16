@@ -30,15 +30,15 @@ public:
 
 	bool Restart();
 
-	inline static ModuleRender* GetRenderer() {return App->renderer.get(); };
-	inline static ModuleWindow* GetWindow() {return App->window.get(); };
-	inline static ModuleTextures* GetTextures() {return App->textures.get(); };
-	inline static ModuleInput* GetInput() {return App->input.get(); };
-	inline static ModuleAudio* GetAudio() {return App->audio.get(); };
-	inline static ModuleFadeToBlack* GetFade() {return App->fade.get(); };
-	inline static ModuleCollision* GetCollision() {return App->collision.get(); };
-	inline static ModuleFont* GetFonts() {return App->fonts.get(); };
-	inline static ModuleTime* GetTime(){return App->time.get();};
+	inline static ModuleRender* GetRenderer() {return App->m_renderer.get(); };
+	inline static ModuleWindow* GetWindow() {return App->m_window.get(); };
+	inline static ModuleTextures* GetTextures() {return App->m_textures.get(); };
+	inline static ModuleInput* GetInput() {return App->m_input.get(); };
+	inline static ModuleAudio* GetAudio() {return App->m_audio.get(); };
+	inline static ModuleFadeToBlack* GetFade() {return App->m_fade.get(); };
+	inline static ModuleCollision* GetCollision() {return App->m_collision.get(); };
+	inline static ModuleFont* GetFonts() {return App->m_fonts.get(); };
+	inline static ModuleTime* GetTime(){return App->m_time.get();};
 
 public:
 	//TODO: maybe set a function for pause that goes through all modules and so on
@@ -47,15 +47,15 @@ public:
 private:
 	std::vector<Module*> modules;
 
-	std::unique_ptr<ModuleRender> renderer = nullptr;
-	std::unique_ptr <ModuleWindow> window = nullptr;
-	std::unique_ptr<ModuleTextures> textures = nullptr;
-	std::unique_ptr<ModuleInput> input = nullptr;
-	std::unique_ptr<ModuleAudio> audio = nullptr;
-	std::unique_ptr<ModuleFadeToBlack> fade = nullptr;
-	std::unique_ptr<ModuleCollision> collision = nullptr;
-	std::unique_ptr<ModuleFont> fonts = nullptr;
-	std::unique_ptr<ModuleTime> time = nullptr;
+	std::unique_ptr<ModuleRender> m_renderer = nullptr;
+	std::unique_ptr <ModuleWindow> m_window = nullptr;
+	std::unique_ptr<ModuleTextures> m_textures = nullptr;
+	std::unique_ptr<ModuleInput> m_input = nullptr;
+	std::unique_ptr<ModuleAudio> m_audio = nullptr;
+	std::unique_ptr<ModuleFadeToBlack> m_fade = nullptr;
+	std::unique_ptr<ModuleCollision> m_collision = nullptr;
+	std::unique_ptr<ModuleFont> m_fonts = nullptr;
+	std::unique_ptr<ModuleTime> m_time = nullptr;
 
 	//TODO: remove, now its here for testing
 	ModuleSceneSega* sega = nullptr;

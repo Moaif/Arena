@@ -36,12 +36,12 @@ public:
 	// Check key states (includes mouse and joy buttons)
 	KeyState GetKey(int id) const
 	{
-		return keyboard[id];
+		return m_keyboard[id];
 	}
 
 	KeyState GetMouseButtonDown(int id) const
 	{
-		return mouse_buttons[id - 1];
+		return m_mouse_buttons[id - 1];
 	}
 
 	// Check for window events last frame
@@ -52,9 +52,9 @@ public:
 	const iVector& GetMousePosition() const;
 
 private:
-	bool		windowEvents[WE_COUNT];
-	KeyState*	keyboard;
-	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
-	iVector mouse_motion;
-	iVector mouse;
+	bool		m_windowEvents[WE_COUNT];
+	KeyState*	m_keyboard;
+	KeyState	m_mouse_buttons[NUM_MOUSE_BUTTONS];
+	iVector m_mouse_motion;
+	iVector m_mouse;
 };
