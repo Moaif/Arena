@@ -46,40 +46,17 @@ ModuleCollision::ModuleCollision()
 ModuleCollision::~ModuleCollision()
 {}
 
-update_status ModuleCollision::PreUpdate()
-{
-	// Remove all colliders scheduled for deletion
-	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end();)
-	{
-		if ((*it)->to_delete == true)
-		{
-			RELEASE(*it);
-			it = colliders.erase(it);
-		}
-		else
-			++it;
-	}
-
-	return UPDATE_CONTINUE;
-}
-
-//This is used by the colliders list to sort it in base of collide's z 
-bool CompareColiders(const Collider* first, const Collider* second) {
-	return (first->z < second->z);
-}
-
 update_status ModuleCollision::Update()
 {
-	colliders.sort(CompareColiders);
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it) {
-		if((*it)->active){
+		if((*it)->IsActive()){
 			for (list<Collider*>::iterator it2 = it; it2 != colliders.end(); ++it2) {
-				if ((*it2)->active && (*it)->active) {//Needed to check again, in case that it changes inside the for loop
-					if (!((*it)->to_delete || (*it2)->to_delete)) {//If one collider is already set to delete, we dont check again, he exist no more
-						if ((*it)->CheckCollision((*it2)->rect, (*it2)->z, (*it2)->speed)) {
-							if (hits[(*it)->type][(*it2)->type]) {
-								(*it)->callback->OnCollision((*it2));
-								(*it2)->callback->OnCollision((*it));
+				if ((*it2)->IsActive() && (*it)->IsActive()) {//Needed to check again, in case that it changes inside the for loop
+					if (!((*it)->IsReadyToDelete() || (*it2)->IsReadyToDelete())) {//If one collider is already set to delete, we dont check again, it exist no more
+						if ((*it)->CheckCollision(*(*it2))) {
+							if (hits[(*it)->GetCollisionType()][(*it2)->GetCollisionType()]) {
+								(*it)->GetGameObject()->OnCollision(*(*it2));
+								(*it2)->GetGameObject()->OnCollision(*(*it));
 							}
 						}
 					}
@@ -100,57 +77,24 @@ update_status ModuleCollision::Update()
 void ModuleCollision::DebugDraw()
 {
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
-		if ((*it)->active) {
-			Renderer->DrawQuad((*it)->rect, 255, 0, 0, 80);
+		if ((*it)->IsActive()) {
+			(*it)->DebugDraw();
 		}
 }
 
-// Called before quitting
 bool ModuleCollision::CleanUp()
 {
-	LOG("Freeing all colliders");
-
-	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
-		RELEASE(*it);
-
 	colliders.clear();
 
 	return true;
 }
 
-Collider* ModuleCollision::AddCollider(const SDL_Rect& rect,const float& z,const float& speed,const CollisionType& type,GameObject* callback)
+void ModuleCollision::SubscribeCollider(Collider& collider)
 {
-	ASSERT(callback != nullptr,AT("Parameter Callback was received as null"));
-	Collider* ret = new Collider(rect,z,speed,type,callback);
-
-	colliders.push_back(ret);
-
-	return ret;
+	colliders.push_back(&collider);
 }
 
-// -----------------------------------------------------
-
-bool Collider::CheckCollision(const SDL_Rect& r,const float& z,const float& speed) const
+void ModuleCollision::UnsubscribeCollider(Collider& collider)
 {
-	bool xHit = true;
-	bool yHit = true;
-	bool zHit = true;
-
-	//Xcollision
-	if (r.x > (this->rect.x + this->rect.w) || (r.x+r.w) < this->rect.x) {
-		xHit = false;
-	}
-
-	//Ycollision
-	if (r.y > (this->rect.y + this->rect.h) || (r.y + r.h) < this->rect.y) {
-		yHit = false;
-	}
-
-	//Zcollision
-	float maxSpeed = max(speed,this->speed)*Time->GetDeltaTime();
-	if (z < this->z - maxSpeed || z > this->z + maxSpeed) {
-		zHit = false;
-	}
-
-	return (xHit && yHit && zHit);
+	colliders.remove(&collider);
 }

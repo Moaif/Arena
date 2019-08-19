@@ -18,7 +18,7 @@ public:
 	{}
 
 	// Operators ------------------------------------------------
-	inline Vector operator -(const Vector &v) const
+	Vector operator -(const Vector &v) const
 	{
 		Vector r;
 
@@ -29,7 +29,12 @@ public:
 		return(r);
 	}
 
-	inline Vector operator + (const Vector &v) const
+	Vector operator-() const
+	{
+		return Vector(-x, -y);
+	}
+
+	Vector operator + (const Vector &v) const
 	{
 		Vector r;
 
@@ -40,7 +45,7 @@ public:
 		return(r);
 	}
 
-	inline const Vector& operator -=(const Vector &v)
+	const Vector& operator -=(const Vector &v)
 	{
 		x -= v.x;
 		y -= v.y;
@@ -49,7 +54,7 @@ public:
 		return(*this);
 	}
 
-	inline const Vector& operator +=(const Vector &v)
+	const Vector& operator +=(const Vector &v)
 	{
 		x += v.x;
 		y += v.y;
@@ -58,17 +63,17 @@ public:
 		return(*this);
 	}
 
-	inline bool operator ==(const Vector& v) const
+	bool operator ==(const Vector& v) const
 	{
 		return (x == v.x && y == v.y && z==v.z);
 	}
 
-	inline bool operator !=(const Vector& v) const
+	bool operator !=(const Vector& v) const
 	{
 		return (x != v.x || y != v.y || z !=v.z);
 	}
 
-	inline Vector& operator =(const Vector& v)
+	Vector& operator =(const Vector& v)
 	{
 		
 		x = v.x;
@@ -77,7 +82,7 @@ public:
 		return (*this);
 	}
 
-	inline Vector& operator =(const Vector* v)
+	Vector& operator =(const Vector* v)
 	{
 		x = v->x;
 		y = v->y;
@@ -85,7 +90,7 @@ public:
 		return (*this);
 	}
 
-	inline Vector operator /(const TYPE& value)
+	Vector operator /(const TYPE& value)
 	{
 		Vector temp;
 		temp.x = x/value;
@@ -94,7 +99,7 @@ public:
 		return temp;
 	}
 
-	inline Vector operator *(const TYPE& value)
+	Vector operator *(const TYPE& value)
 	{
 		Vector temp;
 		temp.x = x * value;
@@ -104,6 +109,14 @@ public:
 	}
 
 	// Utils ------------------------------------------------
+	bool equalWithEpsilon(const Vector& target, float epsilon = 0.01f) const
+	{
+		if(x - epsilon <= target.x && target.x <= x + epsilon)
+			if(y - epsilon <= target.y && target.y <= y + epsilon)
+				return true;
+		return false;
+	}
+
 	inline bool IsZero() const
 	{
 		return (x == 0 && y == 0 && z==0);
@@ -124,14 +137,48 @@ public:
 		return(*this);
 	}
 
-	// Distances ---------------------------------------------
-	inline TYPE DistanceTo(const Vector& v) const
+	inline TYPE getLength() const
 	{
-		TYPE fx = x - v.x;
-		TYPE fy = y - v.y;
-		TYPE fz = z - v.z;
+		return sqrtf(x*x + y * y);
+	}
 
-		return sqrt((fx*fx) + (fy*fy) +(fz*fz));
+	inline TYPE getLengthSq() const
+	{
+		return dot(*this);
+	}
+
+	inline TYPE dot(const Vector& other) const
+	{
+		return x * other.x + y * other.y;
+	}
+
+	inline Vector getPerp() const
+	{
+		return Vector(-y, x);
+	}
+
+	inline Vector getRPerp() const
+	{
+		return Vector(y, -x);
+	}
+
+	inline Vector normalize() const
+	{
+		float length = getLength();
+		if(length == 0.f) return Vector(1.f, 0);
+		return *this / getLength();
+	}
+
+	Vector rotateByAngle(const Vector& pivot, float angle) const
+	{
+		return pivot + (*this - pivot).rotate(angle);
+	}
+
+	inline Vector rotate(float angle) const
+	{
+		float cos = cosf(angle);
+		float sin = sinf(angle);
+		return Vector(x*cos - y * sin, x*sin + y * cos);
 	}
 
 	inline Vector& SetMultiply(const Transform& t0, const Vector& v1)
@@ -145,13 +192,17 @@ public:
 typedef Vector<int> iVector;
 typedef Vector<float> fVector;
 
+const fVector vec2Zero = fVector(0.0f, 0.0f);
+const fVector vec2One = fVector(1.0f, 1.0f);
+const fVector vec2UnitX = fVector(1.0f, 0.0f);
+const fVector vec2UnitY = fVector(0.0f, 1.0f);
+
 class Transform
 {
 public:
 	float m[2][3];
 
-	inline Transform()
-	{}
+	inline Transform(){}
 
 	inline Transform& setIdentity()
 	{

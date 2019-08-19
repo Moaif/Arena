@@ -3,7 +3,7 @@
 #include <vector>
 
 class Component;
-struct Collider;
+class Collider;
 
 class GameObject {
 public:
@@ -21,7 +21,7 @@ public:
 	virtual void Update();
 	virtual void Render();
 
-	virtual void OnCollision(Collider* other) {}
+	virtual void OnCollision(Collider& other) {}
 
 	void AddComponent(Component* component);
 	//TODO template<class TYPE> TYPE* GetComponent();
@@ -31,6 +31,6 @@ public:
 
 public:
 	Transform m_transform;
-	std::vector<Component*> m_components;
+	std::vector<Component*> m_components;//TODO: if not handled by a factory, components should be unique_ptr in the gameobject
 };
 

@@ -2,7 +2,6 @@
 #define __MODULE_H__
 
 class Application;
-struct Collider;
 
 class Module
 {

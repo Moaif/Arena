@@ -10,6 +10,8 @@ void log(const char file[], int line, const char* format, ...);
 
 #define MIN( a, b ) ( ((a) < (b)) ? (a) : (b) )
 #define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
+#define CLAMP( min, max, a) MIN(MAX(min,a),max)
+#define EQEPSILON( a, b ,eps) abs( a - b) <= eps
 
 enum update_status
 {

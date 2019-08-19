@@ -81,6 +81,8 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Components\Component.h" />
+    <ClInclude Include="Source\Engine\Collision.h" />
+    <ClInclude Include="Source\Engine\Components\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Globals.cpp">
@@ -129,6 +131,12 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\GameObject.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Collision.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Components\Collider.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
