@@ -3,6 +3,8 @@
 #include "../Modules/ModuleCollision.h"
 #include "../GameObject.h"
 
+RTTI_REGISTER(Collider)
+
 Collider::Collider(BaseShape * originalShape)
 {}
 
@@ -18,7 +20,7 @@ update_status Collider::Update()
 	update_status ret = Component::Update();
 	if(m_shape)
 	{
-		originalShape->transform(m_shape,GetGameObject()->GetTransform());
+		originalShape->transform(m_shape,GetGameObject()->GetWorldTransform());
 	}
 	return ret;
 }

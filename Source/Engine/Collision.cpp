@@ -22,15 +22,15 @@ Circle& Circle::transform(Circle& target, const Transform& t) const
 {
     fVector scale = t.getScale();
     ASSERT(EQEPSILON(scale.x, scale.y, EPS),"Not equals to epsilon in tranform scale");
-    target.m_center.SetMultiply(t, m_center);
+    target.m_center.setMultiply(t, m_center);
     target.m_radius = m_radius * scale.x;
     return target;
 }
 
 Line& Line::transform(Line& target, const Transform& t) const
 {
-    target.m_p0.SetMultiply(t, m_p0);
-    target.m_p1.SetMultiply(t, m_p1);
+    target.m_p0.setMultiply(t, m_p0);
+    target.m_p1.setMultiply(t, m_p1);
     return target;
 }
 

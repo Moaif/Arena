@@ -14,6 +14,7 @@ enum CollisionType
 
 class Collider: public Component
 {
+	RTTI_ENABLE(Collider,Component)
 public:
 	Collider(BaseShape * originalShape = nullptr);
 

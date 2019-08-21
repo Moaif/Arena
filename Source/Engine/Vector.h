@@ -181,7 +181,7 @@ public:
 		return Vector(x*cos - y * sin, x*sin + y * cos);
 	}
 
-	inline Vector& SetMultiply(const Transform& t0, const Vector& v1)
+	inline Vector& setMultiply(const Transform& t0, const Vector& v1)
 	{
 		x = t0.m[0][0] * v1.x + t0.m[0][1] * v1.y + t0.m[0][2];
 		y = t0.m[1][0] * v1.x + t0.m[1][1] * v1.y + t0.m[1][2];
@@ -340,6 +340,6 @@ public:
 	inline fVector operator*(const fVector& v) const
 	{
 		fVector res;
-		return res.SetMultiply(*this, v);
+		return res.setMultiply(*this, v);
 	}
 };
