@@ -59,7 +59,7 @@ private:
 };
 
 template<class TYPE>
-inline TYPE * GameObject::GetComponent()
+TYPE * GameObject::GetComponent()
 {
 	TYPE* ret = nullptr;
 	//First check with the started components
