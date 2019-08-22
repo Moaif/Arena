@@ -1,6 +1,7 @@
 #pragma once
 #include "RTTI.h"
 #include <memory>
+#include <list>
 #include "Vector.h"
 #include "../Globals.h"
 
@@ -19,10 +20,10 @@ public:
 	virtual update_status Update();
 	virtual bool CleanUp(){return true;};
 
-	GameObject* Instantiate(const std::string& ClassName);
-	GameObject* Instantiate(const std::string& ClassName,fVector position, float angle = 0, GameObject* parent = nullptr);
+	GameObject* Instantiate(const std::string& className);
+	GameObject* Instantiate(const std::string& className,fVector position, float angle = 0, GameObject* parent = nullptr);
 
 private:
-	std::vector<std::unique_ptr<GameObject>> toStartGameObjects;
-	std::vector<std::unique_ptr<GameObject>> gameObjects;
+	std::list<std::unique_ptr<GameObject>> m_toStartGameObjects;
+	std::vector<std::unique_ptr<GameObject>> m_gameObjects;
 };

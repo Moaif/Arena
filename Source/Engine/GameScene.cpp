@@ -14,9 +14,15 @@ GameScene::~GameScene()
 update_status GameScene::PreUpdate()
 {
 	bool loopRet = true;
-	for(std::vector<std::unique_ptr<GameObject>>::iterator it = toStartGameObjects.begin(); it != toStartGameObjects.end() && loopRet; ++it)
+	//Caution, objects not started nor active wont be destroyed if marked to do so
+	for(list<unique_ptr<GameObject>>::iterator it = m_toStartGameObjects.begin(); it != m_toStartGameObjects.end() && loopRet; ++it)
 	{
-		loopRet &= (*it)->Start();
+		if((*it)->IsActive())
+		{
+			loopRet &= (*it)->Start();
+			m_gameObjects.push_back(move((*it)));
+			it = m_toStartGameObjects.erase(it);
+		}
 	}
 
 	if(!loopRet)
@@ -24,39 +30,51 @@ update_status GameScene::PreUpdate()
 		return UPDATE_ERROR;
 	}
 
-	for(std::vector<std::unique_ptr<GameObject>>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	for(vector<unique_ptr<GameObject>>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
 	{
 		if((*it)->IsReadyToDelete())
 		{
-			it = gameObjects.erase(it);
+			it = m_gameObjects.erase(it);
 		}
 	}
 
-	return UPDATE_CONTINUE;
-}
-
-update_status GameScene::Update()
-{
 	update_status ret = UPDATE_CONTINUE;
-	for(std::vector<std::unique_ptr<GameObject>>::iterator it = gameObjects.begin(); it != gameObjects.end() && ret == UPDATE_CONTINUE; ++it)
+	for(vector<unique_ptr<GameObject>>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end() && ret == UPDATE_CONTINUE; ++it)
 	{
-		ret = (*it)->Update();
+		if((*it)->IsActive())
+		{
+			ret = (*it)->PreUpdate();
+		}
 	}
 
 	return ret;
 }
 
-GameObject * GameScene::Instantiate(const std::string & ClassName)
+update_status GameScene::Update()
 {
-	RTTIInfo rtti = RTTIRepo::instance()->getByName(ClassName);
-	GameObject* g = rtti.createInstance<GameObject>();
-	gameObjects.push_back(make_unique<GameObject>(g));
-	return gameObjects[gameObjects.size()-1].get();
+	update_status ret = UPDATE_CONTINUE;
+	for(vector<unique_ptr<GameObject>>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end() && ret == UPDATE_CONTINUE; ++it)
+	{
+		if((*it)->IsActive())
+		{
+			ret = (*it)->Update();
+		}
+	}
+
+	return ret;
 }
 
-GameObject * GameScene::Instantiate(const std::string & ClassName, fVector position, float angle, GameObject * parent)
+GameObject * GameScene::Instantiate(const string & className)
 {
-	GameObject* g = Instantiate(ClassName);
+	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
+	GameObject* gameObject = rtti.createInstance<GameObject>();
+	m_toStartGameObjects.push_back(unique_ptr<GameObject>(gameObject));
+	return m_toStartGameObjects.back().get();
+}
+
+GameObject * GameScene::Instantiate(const string & className, fVector position, float angle, GameObject * parent)
+{
+	GameObject* g = Instantiate(className);
 	Transform transform = Transform().setIdentity();
 	transform.setTranslation(position);
 	transform.setRotation(angle);

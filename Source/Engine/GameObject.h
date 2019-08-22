@@ -1,10 +1,12 @@
 #pragma once
 #include "Vector.h"
 #include <vector>
+#include <list>
+#include <memory>
 #include "../Globals.h"
 #include "RTTI.h"
+#include "Components/Component.h"
 
-class Component;
 class Collider;
 
 class GameObject {
@@ -14,23 +16,28 @@ class GameObject {
 	GameObject(const GameObject&);
 
 public:
-	GameObject(GameObject* parent = nullptr);
-	GameObject(Transform t, GameObject* parent = nullptr);
-
+	GameObject();
 	virtual ~GameObject(){};
 
 	virtual bool Init(){return true;};
 	virtual bool Start(){return true;};
-	virtual update_status Update(){return update_status::UPDATE_CONTINUE;};
-	virtual bool CleanUp(){return true;};
+	virtual update_status PreUpdate();
+	virtual update_status Update();
+	virtual bool CleanUp();
 
 	virtual void OnCollision(Collider& other) {}
 
-	void AddComponent(Component* component);
-	//TODO template<class TYPE> TYPE* GetComponent();
+	void Destroy(){SetToDelete(true);};
+
+	Component* AddComponent(const std::string& className);
+	template<class TYPE> 
+	TYPE* GetComponent();
 
 	GameObject* GetParent()const{return parent;};
 	void SetParent(GameObject& newParent);
+	std::list<GameObject*>& GetChildren(){return children;};
+	void AddChild(GameObject& child){children.push_back(&child);};
+	void RemoveChild(GameObject& child){children.remove(&child);};
 	bool IsActive()const {return m_active;};
 	void SetActive(bool value){m_active = value;};
 	bool IsReadyToDelete()const{return m_toDelete;};
@@ -42,10 +49,37 @@ public:
 
 private:
 	GameObject* parent = nullptr;
+	std::list<GameObject*> children;
 	bool m_toDelete = false;
 	bool m_active = true;
 	Transform m_localTransfrom;
 	Transform m_worldTransform;
-	std::vector<Component*> m_components;//TODO: if not handled by a factory, components should be unique_ptr in the gameobject
+	std::list<std::unique_ptr<Component>> m_toStartComponents;
+	std::vector<std::unique_ptr<Component>> m_components;
 };
 
+template<class TYPE>
+inline TYPE * GameObject::GetComponent()
+{
+	TYPE* ret = nullptr;
+	//First check with the started components
+	for(std::vector<std::unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end(); ++it)
+	{
+		ret = rtti_cast<TYPE>((*it).get());
+		if(ret)
+		{
+			return ret;
+		}
+	}
+	//Then with not started ones
+	for(std::list<std::unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end(); ++it)
+	{
+		ret = rtti_cast<TYPE>((*it).get());
+		if(ret)
+		{
+			return ret;
+		}
+	}
+	//Otherwise return nullptr;
+	return ret;
+}

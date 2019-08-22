@@ -16,6 +16,8 @@ public:
 	virtual update_status Update(){return update_status::UPDATE_CONTINUE;};
 	virtual bool CleanUp(){return true;};
 
+	void Destroy(){SetToDelete(true);};
+
 	GameObject* GetGameObject()const{return m_gameObject;};
 	void SetGameObject(GameObject& gameObject){this->m_gameObject = &gameObject;};
 	bool IsActive()const {return m_active;};

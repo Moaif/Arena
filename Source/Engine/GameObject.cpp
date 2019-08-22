@@ -5,41 +5,89 @@ using namespace std;
 
 RTTI_REGISTER(GameObject);
 
-GameObject::GameObject(GameObject * parent)
+GameObject::GameObject()
 {
-	m_localTransfrom.setIdentity();
-	if(parent)
-	{
-		SetParent(*parent);
-	}
+	m_localTransfrom = Transform().setIdentity();
 }
 
-GameObject::GameObject(Transform t, GameObject * parent)
+update_status GameObject::PreUpdate()
 {
-	m_localTransfrom.setIdentity();
-	if(parent)
+	bool loopRet = true;
+	for(list<unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end() && loopRet; ++it)
 	{
-		SetParent(*parent);
+		loopRet &= (*it)->Start();
+		m_components.push_back(move((*it)));
+		it = m_toStartComponents.erase(it);
 	}
-	SetWorldTransform(t);
+
+	if(!loopRet)
+	{
+		return UPDATE_ERROR;
+	}
+
+	for(vector<unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end(); ++it)
+	{
+		if((*it)->IsReadyToDelete())
+		{
+			it = m_components.erase(it);
+		}
+	}
+
+	return UPDATE_CONTINUE;
 }
 
-void GameObject::AddComponent(Component * component)
+update_status GameObject::Update()
 {
-	//TODO
+	update_status ret = UPDATE_CONTINUE;
+	for(vector<unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end() && ret == UPDATE_CONTINUE; ++it)
+	{
+		if((*it)->IsActive())
+		{
+			ret = (*it)->Update();
+		}
+	}
+
+	return ret;
+}
+
+bool GameObject::CleanUp()
+{
+	bool ret = true;
+
+	for(list<unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end() && ret; ++it)
+	{
+		ret = (*it)->CleanUp();
+	}
+
+	for(vector<unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end() && ret; ++it)
+	{
+		ret = (*it)->CleanUp();
+	}
+
+	return ret;
+}
+
+Component* GameObject::AddComponent(const string& className)
+{
+	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
+	Component* component = rtti.createInstance<Component>();
+	m_toStartComponents.push_back(make_unique<Component>(*component));
+	return m_toStartComponents.back().get();
 }
 
 void GameObject::SetParent(GameObject & newParent)
 {
 	m_localTransfrom = newParent.GetWorldTransform().getInverse() * GetWorldTransform();
+	parent->RemoveChild(*this);
 	parent = &newParent;
+	parent->AddChild(*this);
 }
 
 bool GameObject::SetToDelete(bool value)
 {
 	if(value)
 	{
-		for(vector<Component*>::iterator it = m_components.begin(); it != m_components.end(); ++it)
+		for(vector<unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end(); ++it)
 		{
 			(*it)->SetToDelete(true);
 		}
