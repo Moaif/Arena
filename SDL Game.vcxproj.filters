@@ -82,10 +82,10 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Components\Component.h" />
     <ClInclude Include="Source\Engine\Collision.h" />
-    <ClInclude Include="Source\Engine\Components\Collider.h" />
     <ClInclude Include="Source\Engine\Modules\ModuleGameScene.h" />
     <ClInclude Include="Source\Engine\GameScene.h" />
     <ClInclude Include="Source\Engine\RTTI.h" />
+    <ClInclude Include="Source\Engine\Components\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Globals.cpp">
@@ -139,9 +139,6 @@
     <ClCompile Include="Source\Engine\Collision.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Components\Collider.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\RTTI.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -149,6 +146,12 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Components\Component.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Modules\ModuleGameScene.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Components\Collider.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>

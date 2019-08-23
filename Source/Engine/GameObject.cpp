@@ -1,5 +1,4 @@
 #include "GameObject.h"
-#include "Components/Component.h"
 
 using namespace std;
 
@@ -12,17 +11,14 @@ GameObject::GameObject()
 
 update_status GameObject::PreUpdate()
 {
-	bool loopRet = true;
-	for(list<unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end() && loopRet; ++it)
+	for(list<unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end(); ++it)
 	{
-		loopRet &= (*it)->Start();
+		if(!(*it)->Start())
+		{
+			return UPDATE_ERROR;
+		}
 		m_components.push_back(move((*it)));
 		it = m_toStartComponents.erase(it);
-	}
-
-	if(!loopRet)
-	{
-		return UPDATE_ERROR;
 	}
 
 	for(vector<unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end(); ++it)
@@ -70,8 +66,7 @@ bool GameObject::CleanUp()
 Component* GameObject::AddComponent(const string& className)
 {
 	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
-	Component* component = rtti.createInstance<Component>();
-	m_toStartComponents.push_back(make_unique<Component>(*component));
+	m_toStartComponents.push_back(unique_ptr<Component>(rtti.createInstance<Component>()));
 	return m_toStartComponents.back().get();
 }
 

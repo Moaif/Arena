@@ -5,6 +5,7 @@
 #include <memory>
 #include "../Globals.h"
 #include "RTTI.h"
+#include "GameScene.h"
 #include "Components/Component.h"
 
 class Collider;
@@ -12,11 +13,9 @@ class Collider;
 class GameObject {
 
 	RTTI_ENABLE_BASE(GameObject)
-	GameObject& operator=(const GameObject&){};
-	GameObject(const GameObject&);
 
 public:
-	GameObject();
+
 	virtual ~GameObject(){};
 
 	virtual bool Init(){return true;};
@@ -46,6 +45,15 @@ public:
 	void SetWorldTransform(const Transform& transform);
 	const Transform& GetLocalTransform(){return m_localTransfrom;};
 	void SetLocalTransform(const Transform& transform){m_localTransfrom = transform;};
+
+protected:
+	GameObject();
+	//Won't be used but dont want to allow them public
+	GameObject& operator=(const GameObject&){};
+	GameObject(const GameObject&){};
+	GameObject& operator=(GameObject&&){};
+	GameObject(GameObject&&){};
+	friend GameObject* GameScene::Instantiate(const std::string& className); //This will be the constructor of this class
 
 private:
 	GameObject* parent = nullptr;
