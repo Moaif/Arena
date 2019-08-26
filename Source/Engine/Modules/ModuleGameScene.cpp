@@ -1,5 +1,4 @@
 #include "ModuleGameScene.h"
-#include "../GameScene.h"
 #include "../RTTI.h"
 
 using namespace std;
@@ -27,6 +26,7 @@ update_status ModuleGameScene::PreUpdate()
 		m_sceneStack.push_back(move(m_nextScene));
 		if(!m_sceneStack.back()->Start())
 		{
+			LOG("Failure in Starting the new requested scene");
 			return UPDATE_ERROR;
 		}
 		m_nextScene = nullptr;
@@ -34,6 +34,7 @@ update_status ModuleGameScene::PreUpdate()
 
 	if(m_sceneStack.empty())
 	{
+		LOG("No scenes available in the ModuleGameScene stack PreUpdate");
 		return UPDATE_ERROR;
 	}
 
@@ -44,6 +45,7 @@ update_status ModuleGameScene::Update()
 {
 	if(m_sceneStack.empty())
 	{
+		LOG("No scenes available in the ModuleGameScene stack Update");
 		return UPDATE_ERROR;
 	}
 

@@ -1,21 +1,21 @@
-#include "Collider.h"
+#include "ColliderComponent.h"
 #include "../Application.h"
 #include "../Modules/ModuleCollision.h"
 #include "../GameObject.h"
 
-RTTI_REGISTER(Collider)
+RTTI_REGISTER(ColliderComponent)
 
-Collider::Collider(BaseShape * originalShape)
+ColliderComponent::ColliderComponent(BaseShape * originalShape)
 {}
 
-bool Collider::Init()
+bool ColliderComponent::Init()
 {
 	bool ret = Component::Init();
 	Collision->SubscribeCollider(*this);
 	return ret;
 }
 
-update_status Collider::Update()
+update_status ColliderComponent::Update()
 {
 	update_status ret = Component::Update();
 	if(m_shape)
@@ -25,18 +25,19 @@ update_status Collider::Update()
 	return ret;
 }
 
-bool Collider::CleanUp()
+bool ColliderComponent::CleanUp()
 {
 	bool ret = Component::CleanUp();
 	Collision->UnsubscribeCollider(*this);
 	return ret;
 }
 
-bool Collider::CheckCollision(const Collider & other) const
+bool ColliderComponent::CheckCollision(const ColliderComponent & other) const
 {
 	return m_shape->intersect(*other.m_shape);
 }
 
-void Collider::DebugDraw()
+void ColliderComponent::DebugDraw()
 {
+	//TODO
 }

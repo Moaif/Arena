@@ -1,14 +1,13 @@
 #include "Application.h"
-#include "./Modules/ModuleAudio.h"
-#include "./Modules/ModuleCollision.h"
-#include "./Modules/ModuleFadeToBlack.h"
-#include "./Modules/ModuleFont.h"
-#include "./Modules/ModuleInput.h"
-#include "./Modules/ModuleRender.h"
-#include "./Modules/ModuleTextures.h"
-#include "./Modules/ModuleTime.h"
-#include "./Modules/ModuleWindow.h"
-#include "../Gameplay/ModuleSceneSega.h"
+#include "Modules/ModuleAudio.h"
+#include "Modules/ModuleCollision.h"
+#include "Modules/ModuleFont.h"
+#include "Modules/ModuleInput.h"
+#include "Modules/ModuleRender.h"
+#include "Modules/ModuleTextures.h"
+#include "Modules/ModuleTime.h"
+#include "Modules/ModuleWindow.h"
+#include "Modules/ModuleGameScene.h"
 
 using namespace std;
 
@@ -23,14 +22,10 @@ Application::Application()
 	modules.push_back((m_time = std::make_unique<ModuleTime>()).get());
 	modules.push_back((m_fonts = std::make_unique<ModuleFont>()).get());
 	modules.push_back((m_collision = std::make_unique<ModuleCollision>()).get());
-
-	modules.push_back(sega = new ModuleSceneSega());
+	modules.push_back((m_scene = std::make_unique < ModuleGameScene>()).get());
 
 	//Renderer must be here to draw from buffer after all other modules had request to blit
 	modules.push_back((m_renderer = std::make_unique <ModuleRender>()).get());
-
-	//Fade to black is the last one, in order to work properly
-	modules.push_back((m_fade = std::make_unique < ModuleFadeToBlack>()).get());
 
 	playing = false;
 }
@@ -51,8 +46,6 @@ bool Application::Init()
 		if((*it)->IsEnabled() == true)
 			ret = (*it)->Start();
 	}
-
-	m_fade->FadeToBlack(sega, nullptr, 3.0f);
 
 	return ret;
 }

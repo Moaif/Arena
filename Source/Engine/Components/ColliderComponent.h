@@ -12,17 +12,17 @@ enum CollisionType
 	MAXIMO
 };
 
-class Collider: public Component
+class ColliderComponent : public Component
 {
-	RTTI_ENABLE(Collider,Component)
+	RTTI_ENABLE(ColliderComponent,Component)
 public:
-	Collider(BaseShape * originalShape = nullptr);
+	ColliderComponent(BaseShape * originalShape = nullptr);
 
 	virtual bool Init()override;
 	virtual update_status Update()override;
 	virtual bool CleanUp() override;
 
-	bool CheckCollision(const Collider& other) const;
+	bool CheckCollision(const ColliderComponent& other) const;
 	void DebugDraw();
 
 	CollisionType GetCollisionType()const{return m_collisionType;};

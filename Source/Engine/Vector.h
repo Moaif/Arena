@@ -220,14 +220,14 @@ public:
 		return *this;
 	}
 
-	inline Transform& setTranslationOnly(const fVector& trans)
+	inline Transform& setPositionOnly(const fVector& trans)
 	{
 		m[0][2] = trans.x;
 		m[1][2] = trans.y;
 		return *this;
 	}
 
-	inline fVector getTranslation() const
+	inline fVector getPosition() const
 	{
 		return fVector(m[0][2], m[1][2]);
 	}

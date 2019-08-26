@@ -53,7 +53,7 @@ update_status ModuleRender::Update()
 	while (!m_blitQueue.empty())
 	{
 		BlitStruct temp = m_blitQueue.top();
-		Blit(temp.texture, temp.x, temp.y, &temp.section, &temp.blitSection);
+		Blit(temp.texture, temp.x, temp.y, &temp.section, &temp.blitSection,temp.rotation,nullptr,temp.flip);
 
 		m_blitQueue.pop();
 	}
@@ -81,7 +81,17 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::AddToBlitBuffer(SDL_Texture* texture,const float& x,const float& y, const Layer& layer, SDL_Rect* section, ResizeStruct* resizeInfo) {
+void ModuleRender::AddToBlitBuffer(SDL_Texture * texture, const Transform & transform, const Layer & layer, SDL_Rect * section, SDL_RendererFlip flip)
+{
+	ASSERT(texture != nullptr, AT("Texture parameter was received as null"));
+
+	const fVector pos = transform.getPosition();
+	fVector scale = transform.getScale();
+	ResizeStruct resizeInfo = ResizeStruct(static_cast<int>(section->w * scale.x),static_cast<int>(section->h * scale.y));
+	AddToBlitBuffer(texture, pos.x, pos.y, layer, section, &resizeInfo, transform.getRotation(), flip);
+}
+
+void ModuleRender::AddToBlitBuffer(SDL_Texture* texture, float x, float y, const Layer& layer, SDL_Rect* section, ResizeStruct* resizeInfo, float rotation, SDL_RendererFlip flip) {
 	
 	ASSERT(texture != nullptr,AT("Texture parameter was received as null"));
 
@@ -97,13 +107,13 @@ void ModuleRender::AddToBlitBuffer(SDL_Texture* texture,const float& x,const flo
 	}
 
 	BlitStruct temp;
-	temp = { texture,x,y,layer,rect,resize };
+	temp = { texture,x,y,rotation,layer,rect,resize,flip };
 	
 	m_blitQueue.push(temp);
 }
 
 // Blit to screen
-bool ModuleRender::Blit(SDL_Texture* texture,float x,float y, SDL_Rect* section, ResizeStruct* resizeInfo)
+bool ModuleRender::Blit(SDL_Texture* texture,float x,float y, SDL_Rect* section, ResizeStruct* resizeInfo, float rotation, SDL_Point* center, SDL_RendererFlip flip)
 {
 	ASSERT(texture,AT("Texture parameter was received as null"));
 
@@ -114,7 +124,7 @@ bool ModuleRender::Blit(SDL_Texture* texture,float x,float y, SDL_Rect* section,
 		rect.w = resizeInfo->w;
 		rect.h = resizeInfo->h;
 	}
-	else if (section && SDL_RectEmpty(section)) {
+	else if (section && !SDL_RectEmpty(section)) {
 		rect.w = section->w;
 		rect.h = section->h;
 	}
@@ -131,7 +141,7 @@ bool ModuleRender::Blit(SDL_Texture* texture,float x,float y, SDL_Rect* section,
 	rect.x =static_cast<int>(x - (rect.w / 2));
 	rect.y = static_cast<int>(y - (rect.h / 2));
 
-	if(SDL_RenderCopy(m_renderer, texture, section, &rect) != 0)
+	if(SDL_RenderCopyEx(m_renderer, texture, section, &rect, rotation,center,flip) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		return false;
@@ -140,7 +150,7 @@ bool ModuleRender::Blit(SDL_Texture* texture,float x,float y, SDL_Rect* section,
 	return true;
 }
 
-bool ModuleRender::Print(const Font* font,const float& x,const float& y,const string& mesage, float fontSize) 
+bool ModuleRender::Print(const Font* font, float x, float y, const string& mesage, float rotation, float fontSize)
 {
 	ASSERT(font != nullptr,AT("Font parameter received as null"));
 
@@ -155,7 +165,7 @@ bool ModuleRender::Print(const Font* font,const float& x,const float& y,const st
 	SDL_QueryTexture(tempTexture, NULL, NULL, &rect.w, &rect.h);
 	ResizeStruct size = { (int)(rect.w*fontSize),(int)(rect.h*fontSize) };
 
-	AddToBlitBuffer(tempTexture, x, y, Layer::UI, nullptr, &size);
+	AddToBlitBuffer(tempTexture, x, y, Layer::UI, nullptr, &size, rotation);
 	return true;
 }
 

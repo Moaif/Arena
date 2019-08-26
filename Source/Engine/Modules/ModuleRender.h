@@ -6,6 +6,7 @@ struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
 class Font;
+class Transform;
 
 enum class Layer
 {
@@ -34,9 +35,11 @@ struct BlitStruct
 	SDL_Texture* texture;
 	float x;
 	float y;
+	float rotation;
 	Layer layer;
 	SDL_Rect section;
 	ResizeStruct blitSection;
+	SDL_RendererFlip flip;
 };
 
 struct CompareLayer {
@@ -57,9 +60,10 @@ public:
 	update_status PostUpdate()override;
 	bool CleanUp() override;
 
-	void AddToBlitBuffer(SDL_Texture* texture, const float& x, const float& y, const Layer& layer, SDL_Rect* section, ResizeStruct* resizeInfo);
-	bool Blit(SDL_Texture* texture, float x, float y, SDL_Rect* section, ResizeStruct* resizeInfo);
-	bool Print(const Font* font,const float& x, const float& y,const std::string& message, float fontSize = 1);
+	void AddToBlitBuffer(SDL_Texture* texture, const Transform& transform, const Layer& layer, SDL_Rect* section, SDL_RendererFlip flip = SDL_RendererFlip::SDL_FLIP_NONE);
+	void AddToBlitBuffer(SDL_Texture* texture, float x, float y, const Layer& layer, SDL_Rect* section, ResizeStruct* resizeInfo, float rotation = 0, SDL_RendererFlip flip = SDL_RendererFlip::SDL_FLIP_NONE);
+	bool Blit(SDL_Texture* texture, float x, float y, SDL_Rect* section, ResizeStruct* resizeInfo, float rotation = 0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_RendererFlip::SDL_FLIP_NONE);
+	bool Print(const Font* font, float x, float y,const std::string& message, float rotation= 0, float fontSize = 1);
 	bool DirectPrint(const Font* font,const  float& x,const float& y,const std::string& message, float fontSize = 1);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	bool DrawQuads(const SDL_Rect rects[],const int& count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);

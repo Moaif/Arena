@@ -3,8 +3,7 @@
 #include <vector>
 #include <memory>
 #include "Module.h"
-
-class GameScene;
+#include "../GameScene.h"
 
 class ModuleGameScene : public Module
 {

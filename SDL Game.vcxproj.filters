@@ -55,9 +55,6 @@
     <ClInclude Include="Source\Engine\Modules\ModuleCollision.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Modules\ModuleFadeToBlack.h">
-      <Filter>Core Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Modules\ModuleFont.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
@@ -76,16 +73,16 @@
     <ClInclude Include="Source\Engine\Modules\ModuleWindow.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Gameplay\ModuleSceneSega.h" />
     <ClInclude Include="Source\Engine\Vector.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Components\Component.h" />
     <ClInclude Include="Source\Engine\Collision.h" />
     <ClInclude Include="Source\Engine\Modules\ModuleGameScene.h" />
     <ClInclude Include="Source\Engine\GameScene.h" />
     <ClInclude Include="Source\Engine\RTTI.h" />
-    <ClInclude Include="Source\Engine\Components\Collider.h" />
+    <ClInclude Include="Source\Engine\Components\Component.h" />
+    <ClInclude Include="Source\Engine\Components\RendererComponent.h" />
+    <ClInclude Include="Source\Engine\Components\ColliderComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Globals.cpp">
@@ -109,9 +106,6 @@
     <ClCompile Include="Source\Engine\Modules\ModuleCollision.cpp">
       <Filter>Core Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Modules\ModuleFadeToBlack.cpp">
-      <Filter>Core Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Modules\ModuleFont.cpp">
       <Filter>Core Modules</Filter>
     </ClCompile>
@@ -129,9 +123,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Modules\ModuleWindow.cpp">
       <Filter>Core Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\ModuleSceneSega.cpp">
-      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\GameObject.cpp">
       <Filter>Main</Filter>
@@ -151,7 +142,10 @@
     <ClCompile Include="Source\Engine\Modules\ModuleGameScene.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Components\Collider.cpp">
+    <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Components\RendererComponent.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>

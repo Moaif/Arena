@@ -2,7 +2,6 @@
 #include <vector>
 #include "Application.h"
 #include "./Modules/ModuleTime.h"
-#include <SDL.h>
 
 using namespace std;
 
@@ -15,6 +14,7 @@ public:
 	bool inversed = false;
 	float speed = 1.0f;
 	vector<SDL_Rect> frames;
+	SDL_Texture* texture;
 
 private:
 	int m_currentFrame = 0;

@@ -8,7 +8,7 @@
 #include "GameScene.h"
 #include "Components/Component.h"
 
-class Collider;
+class ColliderComponent;
 
 class GameObject {
 
@@ -24,7 +24,7 @@ public:
 	virtual update_status Update();
 	virtual bool CleanUp();
 
-	virtual void OnCollision(Collider& other) {}
+	virtual void OnCollision(ColliderComponent& other) {};
 
 	void Destroy(){SetToDelete(true);};
 

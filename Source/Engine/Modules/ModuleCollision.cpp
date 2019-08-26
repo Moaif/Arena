@@ -48,9 +48,9 @@ ModuleCollision::~ModuleCollision()
 
 update_status ModuleCollision::Update()
 {
-	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it) {
+	for (list<ColliderComponent*>::iterator it = colliders.begin(); it != colliders.end(); ++it) {
 		if((*it)->IsActive()){
-			for (list<Collider*>::iterator it2 = it; it2 != colliders.end(); ++it2) {
+			for (list<ColliderComponent*>::iterator it2 = it; it2 != colliders.end(); ++it2) {
 				if ((*it2)->IsActive() && (*it)->IsActive()) {//Needed to check again, in case that it changes inside the for loop
 					if (!((*it)->IsReadyToDelete() || (*it2)->IsReadyToDelete())) {//If one collider is already set to delete, we dont check again, it exist no more
 						if ((*it)->CheckCollision(*(*it2))) {
@@ -76,7 +76,7 @@ update_status ModuleCollision::Update()
 
 void ModuleCollision::DebugDraw()
 {
-	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
+	for (list<ColliderComponent*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
 		if ((*it)->IsActive()) {
 			(*it)->DebugDraw();
 		}
@@ -89,12 +89,12 @@ bool ModuleCollision::CleanUp()
 	return true;
 }
 
-void ModuleCollision::SubscribeCollider(Collider& collider)
+void ModuleCollision::SubscribeCollider(ColliderComponent& collider)
 {
 	colliders.push_back(&collider);
 }
 
-void ModuleCollision::UnsubscribeCollider(Collider& collider)
+void ModuleCollision::UnsubscribeCollider(ColliderComponent& collider)
 {
 	colliders.remove(&collider);
 }

@@ -2,7 +2,7 @@
 #include<list>
 #include "Module.h"
 #include <SDL.h>
-#include "../Components/Collider.h"
+#include "../Components/ColliderComponent.h"
 
 class GameObject;
 
@@ -17,13 +17,13 @@ public:
 
 	bool CleanUp()override;
 
-	void SubscribeCollider(Collider& collider);
-	void UnsubscribeCollider(Collider& collider);
+	void SubscribeCollider(ColliderComponent& collider);
+	void UnsubscribeCollider(ColliderComponent& collider);
 	void DebugDraw();
 
 private:
 
-	std::list<Collider*> colliders;
+	std::list<ColliderComponent*> colliders;
 	bool debug = false;
 	bool hits[MAXIMO][MAXIMO];
 };
