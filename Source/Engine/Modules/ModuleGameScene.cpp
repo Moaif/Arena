@@ -6,6 +6,7 @@ using namespace std;
 bool ModuleGameScene::Start()
 {
 	//TODO:: Add the first scene to the game to start it
+	AddScene("TestScene");
 
 	return true;
 }

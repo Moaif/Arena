@@ -76,7 +76,7 @@ GameObject * GameScene::Instantiate(const string & className, fVector position, 
 {
 	GameObject* g = Instantiate(className);
 	Transform transform = Transform().setIdentity();
-	transform.setTranslation(position);
+	transform.setPosition(position);
 	transform.setRotation(angle);
 	g->SetWorldTransform(transform);
 	if(parent)

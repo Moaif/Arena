@@ -43,7 +43,7 @@ public:
 	bool SetToDelete(bool value = true);
 	const Transform& GetWorldTransform();
 	void SetWorldTransform(const Transform& transform);
-	const Transform& GetLocalTransform(){return m_localTransfrom;};
+	Transform& GetLocalTransform(){return m_localTransfrom;};
 	void SetLocalTransform(const Transform& transform){m_localTransfrom = transform;};
 
 protected:

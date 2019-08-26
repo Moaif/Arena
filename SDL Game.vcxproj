@@ -160,6 +160,8 @@
     <ClInclude Include="Source\Engine\GameScene.h" />
     <ClInclude Include="Source\Engine\Modules\ModuleGameScene.h" />
     <ClInclude Include="Source\Engine\RTTI.h" />
+    <ClInclude Include="Source\Gameplay\Player.h" />
+    <ClInclude Include="Source\Gameplay\TestScene.h" />
     <ClInclude Include="Source\Globals.h" />
     <ClInclude Include="Source\Engine\json.hpp" />
     <ClInclude Include="Source\Engine\MemLeaks.h" />
@@ -185,6 +187,8 @@
     <ClCompile Include="Source\Engine\GameScene.cpp" />
     <ClCompile Include="Source\Engine\Modules\ModuleGameScene.cpp" />
     <ClCompile Include="Source\Engine\RTTI.cpp" />
+    <ClCompile Include="Source\Gameplay\Player.cpp" />
+    <ClCompile Include="Source\Gameplay\TestScene.cpp" />
     <ClCompile Include="Source\Globals.cpp" />
     <ClCompile Include="Source\Engine\Log.cpp" />
     <ClCompile Include="Source\Main.cpp" />

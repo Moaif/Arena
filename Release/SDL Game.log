@@ -1,7 +1,18 @@
-﻿  ModuleGameScene.cpp
+﻿  Application.cpp
+  Collision.cpp
+  ColliderComponent.cpp
+  RendererComponent.cpp
+  GameObject.cpp
+  GameScene.cpp
+  ModuleCollision.cpp
+  ModuleGameScene.cpp
+  ModuleInput.cpp
+  ModuleRender.cpp
+  Player.cpp
+  TestScene.cpp
   Generating code
-  2 of 2121 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  11 of 2550 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    15 functions had inline decision re-evaluated but remain unchanged
+    4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SDL Game.vcxproj -> C:\Users\Corma\Documents\GitHub\Arena\Arena\Game\Arena.exe

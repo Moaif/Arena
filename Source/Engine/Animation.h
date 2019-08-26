@@ -26,7 +26,7 @@ public:
 	{}
 
 	Animation(const Animation& anim) : loop(anim.loop), randFrame(anim.randFrame), timeBased(anim.timeBased),
-	inversed(anim.inversed), speed(anim.speed), frames(anim.frames)
+	inversed(anim.inversed), speed(anim.speed), frames(anim.frames), texture(anim.texture)
 	{}
 
 	void Start()

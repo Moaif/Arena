@@ -2,6 +2,7 @@
 #define EPS 1e-9
 #include <SDL_stdinc.h>
 #include <cmath>
+#include "../Globals.h"
 
 class Transform;
 
@@ -197,6 +198,16 @@ const fVector vec2One = fVector(1.0f, 1.0f);
 const fVector vec2UnitX = fVector(1.0f, 0.0f);
 const fVector vec2UnitY = fVector(0.0f, 1.0f);
 
+static float RandiansToDegrees(float radiansAngle)
+{
+	return static_cast<float>((radiansAngle / (2 * M_PI)) * 360);
+}
+
+static float DegreesToRadians(float degreesAngle)
+{
+	return static_cast<float>((degreesAngle / 360)*(2 * M_PI));
+}
+
 class Transform
 {
 public:
@@ -211,19 +222,16 @@ public:
 		return *this;
 	}
 
-	inline Transform& setTranslation(const fVector& trans)
+	inline Transform& setPosition(const fVector& pos)
 	{
-		m[0][0] = m[1][1] = 1.0f;
-		m[0][1] = m[1][0] = 0.0f;
-		m[0][2] = trans.x;
-		m[1][2] = trans.y;
+		m[0][2] = pos.x;
+		m[1][2] = pos.y;
 		return *this;
 	}
 
-	inline Transform& setPositionOnly(const fVector& trans)
+	inline Transform& translate(const fVector& translation)
 	{
-		m[0][2] = trans.x;
-		m[1][2] = trans.y;
+		setPosition(getPosition() + translation);
 		return *this;
 	}
 
@@ -232,21 +240,11 @@ public:
 		return fVector(m[0][2], m[1][2]);
 	}
 
-
-	inline Transform& setRotation(float angle)
-	{
-		m[0][0] = m[1][1] = cosf(angle);
-		m[1][0] = sinf(angle);
-		m[0][1] = -m[1][0];
-		m[0][2] = m[1][2] = 0.0f;
-		return *this;
-	}
-
-	inline Transform setRotationOnly(float angle)
+	inline Transform setRotation(float angleDegree)
 	{
 		fVector scale = getScale();
-		float c = cosf(angle);
-		float s = sinf(angle);
+		float c = cosf(DegreesToRadians(angleDegree));
+		float s = sinf(DegreesToRadians(angleDegree));
 		m[0][0] = c * scale.x;
 		m[0][1] = -s * scale.x;
 		m[1][0] = s * scale.y;
@@ -254,24 +252,23 @@ public:
 		return *this;
 	}
 
-	inline float getRotation() const
+	inline Transform rotate(float angleDegree)
 	{
-		float scaleX = sqrtf(sqrt(m[0][0]) + sqrt(m[0][1]));
-		float angle = acosf(m[0][0] / scaleX);
-		if(m[1][0] < -EPS)
-			angle = 2 * (float)M_PI - angle;
-		return angle;
-	};
-
-	inline Transform& setScale(const fVector& scale)
-	{
-		m[0][0] = scale.x;
-		m[1][1] = scale.y;
-		m[0][1] = m[0][2] = m[1][0] = m[1][2] = 0.0f;
+		Transform rotationMatrix = Transform().setIdentity().setRotation(angleDegree);
+		setMultiply(*this,rotationMatrix);
 		return *this;
 	}
 
-	inline Transform& setScaleOnly(const fVector& scale)
+	inline float getRotation() const
+	{
+		float scaleX = getScale().x;
+		float angleRadian = acosf(m[0][0] / scaleX);
+		if(m[1][0] < -EPS)
+			angleRadian = 2 * (float)M_PI - angleRadian;
+		return RandiansToDegrees(angleRadian);
+	};
+
+	inline Transform& setScale(const fVector& scale)
 	{
 		fVector oldScale = getScale();
 		float factorX = scale.x / oldScale.x;
@@ -285,11 +282,11 @@ public:
 
 	inline fVector getScale() const
 	{
-		return fVector(sqrtf(sqrt(m[0][0]) + sqrt(m[0][1])),
-			sqrtf(sqrt(m[1][0]) + sqrt(m[1][1])));
+		return fVector(sqrtf(m[0][0] * m[0][0] + m[0][1] * m[0][1]),
+			sqrtf(m[1][0] * m[1][0] + m[1][1] * m[1][1]));
 	}
 
-	inline Transform& set(const fVector& trans, float angle, const fVector& scale)
+	inline Transform& set(const fVector& pos, float angle, const fVector& scale)
 	{
 		float c = cosf(angle);
 		float s = sinf(angle);
@@ -297,8 +294,8 @@ public:
 		m[0][1] = -s * scale.x;
 		m[1][0] = s * scale.y;
 		m[1][1] = c * scale.y;
-		m[0][2] = trans.x;
-		m[1][2] = trans.y;
+		m[0][2] = pos.x;
+		m[1][2] = pos.y;
 		return *this;
 	}
 

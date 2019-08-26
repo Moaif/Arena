@@ -67,7 +67,9 @@ Component* GameObject::AddComponent(const string& className)
 {
 	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
 	m_toStartComponents.push_back(unique_ptr<Component>(rtti.createInstance<Component>()));
-	return m_toStartComponents.back().get();
+	Component* component = m_toStartComponents.back().get();
+	component->SetGameObject(*this);
+	return component;
 }
 
 void GameObject::SetParent(GameObject & newParent)

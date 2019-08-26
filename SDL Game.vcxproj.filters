@@ -83,6 +83,8 @@
     <ClInclude Include="Source\Engine\Components\Component.h" />
     <ClInclude Include="Source\Engine\Components\RendererComponent.h" />
     <ClInclude Include="Source\Engine\Components\ColliderComponent.h" />
+    <ClInclude Include="Source\Gameplay\TestScene.h" />
+    <ClInclude Include="Source\Gameplay\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Globals.cpp">
@@ -146,6 +148,12 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Components\RendererComponent.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Player.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\TestScene.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
