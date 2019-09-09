@@ -299,6 +299,15 @@ public:
 		return *this;
 	}
 
+	inline fVector Right()
+	{
+		return fVector(m[0][0],m[0][1]);
+	}
+
+	inline fVector Forward(){
+		return fVector(m[1][0],m[1][1]);
+	}
+
 	inline Transform& setMultiply(const Transform& t0, const Transform& t1)
 	{
 		for(int row = 0; row < 2; ++row)

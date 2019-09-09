@@ -41,12 +41,11 @@ update_status Player::Update()
 	}
 	else if(Input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		//TODO make transform.forward to move in front
-		GetLocalTransform().translate(fVector(0, -speed));
+		GetLocalTransform().translate(GetLocalTransform().Forward()*-speed);
 	}
 	else if(Input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
-		GetLocalTransform().translate(fVector(0, speed));
+		GetLocalTransform().translate(GetLocalTransform().Forward()*speed);
 	}
 
 	return ret;
