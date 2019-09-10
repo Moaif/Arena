@@ -57,6 +57,16 @@ update_status ModuleRender::Update()
 
 		m_blitQueue.pop();
 	}
+
+	//Print colliders if any
+	while(!m_colliderBlitList.empty())
+	{
+		ColliderBlitStruct tempCollider = m_colliderBlitList.back();
+		DrawLines(tempCollider.points, tempCollider.count, tempCollider.r, tempCollider.g, tempCollider.b, tempCollider.a);
+
+		m_colliderBlitList.pop_back();
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -228,4 +238,23 @@ bool ModuleRender::DrawQuads(const SDL_Rect rects[],const int& count, Uint8 r, U
 	}
 
 	return true;
+}
+
+void ModuleRender::DrawLines(const SDL_Point * points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
+	SDL_RenderDrawLines(m_renderer, points, count);
+}
+
+void ModuleRender::AddToColliderDrawBuffer(const SDL_Point * points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	ColliderBlitStruct colliderStruct;
+	colliderStruct.points = points;
+	colliderStruct.count = count;
+	colliderStruct.r = r;
+	colliderStruct.g = g;
+	colliderStruct.b = b;
+	colliderStruct.a = a;
+
+	m_colliderBlitList.push_back(colliderStruct);
 }

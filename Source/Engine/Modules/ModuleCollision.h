@@ -19,11 +19,11 @@ public:
 
 	void SubscribeCollider(ColliderComponent& collider);
 	void UnsubscribeCollider(ColliderComponent& collider);
-	void DebugDraw();
+	void DebugDraw()const;
 
 private:
 
 	std::list<ColliderComponent*> colliders;
 	bool debug = false;
-	bool hits[MAXIMO][MAXIMO];
+	bool hits[MAX][MAX];
 };

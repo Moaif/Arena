@@ -69,6 +69,7 @@ Component* GameObject::AddComponent(const string& className)
 	m_toStartComponents.push_back(unique_ptr<Component>(rtti.createInstance<Component>()));
 	Component* component = m_toStartComponents.back().get();
 	component->SetGameObject(*this);
+	component->Init();
 	return component;
 }
 

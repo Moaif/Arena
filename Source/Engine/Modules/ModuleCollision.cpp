@@ -10,36 +10,35 @@ using namespace std;
 
 ModuleCollision::ModuleCollision()
 {
+	hits[DEFAULT][DEFAULT] = true;
+	hits[DEFAULT][PLAYER] = true;
+	hits[DEFAULT][OBSTACLE] = true;
+	hits[DEFAULT][SHOOT] = true;
+	hits[DEFAULT][ENEMY] = true;
+
+	hits[PLAYER][DEFAULT] = true;
 	hits[PLAYER][PLAYER] = false;
-	hits[PLAYER][LASER] = false;
-	hits[PLAYER][ENEMY_SHOOT] = true;
+	hits[PLAYER][OBSTACLE] = true;
+	hits[PLAYER][SHOOT] = true;
 	hits[PLAYER][ENEMY] = true;
-	hits[PLAYER][NO_DMG_ENEMY] = true;
 
-	hits[LASER][PLAYER] = false;
-	hits[LASER][LASER] = false;
-	hits[LASER][ENEMY_SHOOT] = false;
-	hits[LASER][ENEMY] = true;
-	hits[LASER][NO_DMG_ENEMY] = true;
+	hits[OBSTACLE][DEFAULT] = true;
+	hits[OBSTACLE][PLAYER] = true;
+	hits[OBSTACLE][OBSTACLE] = true;
+	hits[OBSTACLE][SHOOT] = true;
+	hits[OBSTACLE][ENEMY] = true;
 
-	hits[ENEMY_SHOOT][PLAYER] = true;
-	hits[ENEMY_SHOOT][LASER] = false;
-	hits[ENEMY_SHOOT][ENEMY_SHOOT] = false;
-	hits[ENEMY_SHOOT][ENEMY] = false;
-	hits[ENEMY_SHOOT][NO_DMG_ENEMY] = false;
+	hits[SHOOT][DEFAULT] = true;
+	hits[SHOOT][PLAYER] = true;
+	hits[SHOOT][OBSTACLE] = true;
+	hits[SHOOT][SHOOT] = false;
+	hits[SHOOT][ENEMY] = true;
 
+	hits[ENEMY][DEFAULT] = true;
 	hits[ENEMY][PLAYER] = true;
-	hits[ENEMY][LASER] = true;
-	hits[ENEMY][ENEMY_SHOOT] = false;
+	hits[ENEMY][OBSTACLE] = true;
+	hits[ENEMY][SHOOT] = true;
 	hits[ENEMY][ENEMY] = false;
-	hits[ENEMY][NO_DMG_ENEMY] = false;
-
-	hits[NO_DMG_ENEMY][PLAYER] = true;
-	hits[NO_DMG_ENEMY][LASER] = true;
-	hits[NO_DMG_ENEMY][ENEMY_SHOOT] = false;
-	hits[NO_DMG_ENEMY][ENEMY] = false;
-	hits[NO_DMG_ENEMY][NO_DMG_ENEMY] = false;
-
 }
 
 // Destructor
@@ -74,10 +73,12 @@ update_status ModuleCollision::Update()
 	return UPDATE_CONTINUE;
 }
 
-void ModuleCollision::DebugDraw()
+void ModuleCollision::DebugDraw()const
 {
-	for (list<ColliderComponent*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
+	LOG("Before Loop");
+	for (list<ColliderComponent*>::const_iterator it = colliders.cbegin(); it != colliders.cend(); ++it)
 		if ((*it)->IsActive()) {
+			LOG("Loop");
 			(*it)->DebugDraw();
 		}
 }

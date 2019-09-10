@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../Engine/Components/RendererComponent.h"
+#include "../Engine/Components/ColliderComponent.h"
 #include "../Engine/Modules/ModuleTextures.h"
 #include "../Engine/Modules/ModuleInput.h"
 #include "../Engine/Modules/ModuleTime.h"
@@ -13,6 +14,7 @@ bool Player::Start()
 {
 	bool ret = GameObject::Start();
 
+	//Render component
 	RendererComponent* renderer = dynamic_cast<RendererComponent*>(AddComponent("RendererComponent"));
 	Animation anim = Animation();
 	anim.frames.push_back({ 4, 4, 20, 47 });
@@ -23,6 +25,12 @@ bool Player::Start()
 	anim.texture = Textures->Load("assets/character.png");
 	ASSERT(anim.texture, AT("Player failed on loading it's textures"));
 	renderer->AddAnimation("run",anim);
+
+	//Collider component
+	ColliderComponent* collider = dynamic_cast<ColliderComponent*>(AddComponent("ColliderComponent"));
+	collider->SetOriginalShape(new Shape<AABB>());
+	static_cast<Shape<AABB>*>(collider->GetOriginalShape())->m_Shape = AABB(fVector(0,1),fVector(0,1));
+	collider->SetCollisionType(CollisionType::PLAYER);
 
 	return ret;
 }

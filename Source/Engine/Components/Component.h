@@ -11,7 +11,7 @@ public:
 	//TODO: try to do the same as gameobject and make this private, already tried but as gameObject is used by
 	// gameScene and has a unique_ptr to this, it requieres the complete definition so gameScene can build its own
 	// unique_ptr of gameObjects, so i was stuck in a header include lock
-	Component();
+	Component(){};
 	virtual ~Component(){};
 
 	virtual bool Init(){return true;};

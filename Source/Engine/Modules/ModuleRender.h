@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include <queue>
+#include <list>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -42,6 +43,16 @@ struct BlitStruct
 	SDL_RendererFlip flip;
 };
 
+struct ColliderBlitStruct
+{
+	const SDL_Point* points;
+	int count;
+	Uint8 r;
+	Uint8 g;
+	Uint8 b;
+	Uint8 a;
+};
+
 struct CompareLayer {
 	bool operator()(BlitStruct const & p1, BlitStruct const & p2) {
 		return p1.layer < p2.layer;
@@ -67,11 +78,14 @@ public:
 	bool DirectPrint(const Font* font,const  float& x,const float& y,const std::string& message, float fontSize = 1);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	bool DrawQuads(const SDL_Rect rects[],const int& count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+	void DrawLines(const SDL_Point* points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+	void AddToColliderDrawBuffer(const SDL_Point* points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
 
 	SDL_Renderer* GetRenderer()const{return m_renderer;};
 
 private:
 	//Depth buffer
 	std::priority_queue<BlitStruct,std::vector<BlitStruct>,CompareLayer> m_blitQueue;
+	std::list<ColliderBlitStruct> m_colliderBlitList;
 	SDL_Renderer* m_renderer = nullptr;
 };

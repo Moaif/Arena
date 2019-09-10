@@ -4,12 +4,12 @@
 
 enum CollisionType
 {
+	DEFAULT,
 	PLAYER,
-	LASER,
-	ENEMY_SHOOT,
+	OBSTACLE,
+	SHOOT,
 	ENEMY,
-	NO_DMG_ENEMY,
-	MAXIMO
+	MAX
 };
 
 class ColliderComponent : public Component
@@ -23,13 +23,16 @@ public:
 	virtual bool CleanUp() override;
 
 	bool CheckCollision(const ColliderComponent& other) const;
-	void DebugDraw();
+	void DebugDraw()const;
 
 	CollisionType GetCollisionType()const{return m_collisionType;};
 	void SetCollisionType(CollisionType type){m_collisionType = type;};
 
+	BaseShape* GetOriginalShape()const{return m_originalShape;};
+	void SetOriginalShape(BaseShape* shape);
+
 private:
 	CollisionType m_collisionType;
-	BaseShape* originalShape;
+	BaseShape* m_originalShape;
 	BaseShape* m_shape;
 };

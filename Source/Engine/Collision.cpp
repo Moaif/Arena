@@ -1,6 +1,8 @@
 #include <algorithm>
 #include "../Globals.h"
 #include "Collision.h"
+#include "Modules/ModuleRender.h"
+#include "Application.h"
 
 OBB& AABB::transform(OBB& target, const Transform& t) const
 {
@@ -10,12 +12,46 @@ OBB& AABB::transform(OBB& target, const Transform& t) const
     return target;
 }
 
+void AABB::DebugDraw() const
+{
+	SDL_Point pts[5];
+	pts[0].x = (int)m_min.x;
+	pts[0].y = (int)m_min.y;
+	pts[1].x = (int)m_min.x;
+	pts[1].y = (int)m_max.y;
+	pts[2].x = (int)m_max.x;
+	pts[2].y = (int)m_max.y;
+	pts[3].x = (int)m_max.x;
+	pts[3].y = (int)m_min.y;
+	pts[4] = pts[0];
+	Renderer->AddToColliderDrawBuffer(pts, 5,255, 0, 0);
+}
+
 const AABB aabbUnit(-vec2One, vec2One);
 
 OBB& OBB::transform(OBB& target, const Transform& t) const
 {
     target.m_transform.setMultiply(t, m_transform);
     return target;
+}
+
+void OBB::DebugDraw() const
+{
+	SDL_Point pts[5];
+	fVector p = m_transform * -vec2One;
+	pts[0].x = (int)p.x;
+	pts[0].y = (int)p.y;
+	p = m_transform * fVector(-1.0f, 1.0f);
+	pts[1].x = (int)p.x;
+	pts[1].y = (int)p.y;
+	p = m_transform * vec2One;
+	pts[2].x = (int)p.x;
+	pts[2].y = (int)p.y;
+	p = m_transform * fVector(1.0f, -1.0f);
+	pts[3].x = (int)p.x;
+	pts[3].y = (int)p.y;
+	pts[4] = pts[0];
+	Renderer->AddToColliderDrawBuffer(pts, 5, 255, 0, 0);
 }
 
 Circle& Circle::transform(Circle& target, const Transform& t) const
@@ -27,11 +63,34 @@ Circle& Circle::transform(Circle& target, const Transform& t) const
     return target;
 }
 
+void Circle::DebugDraw() const
+{
+	const int circleDefinition = 21;
+	SDL_Point pts[circleDefinition];
+	for(unsigned i = 0; i < circleDefinition; ++i)
+	{
+		float angle =static_cast<float>( 2 * M_PI * i / (circleDefinition - 1));
+		pts[i].x = (int)(m_center.x + cosf(angle) * m_radius);
+		pts[i].y = (int)(m_center.y + sinf(angle) * m_radius);
+	}
+	Renderer->AddToColliderDrawBuffer(pts, circleDefinition, 255, 0, 0);
+}
+
 Line& Line::transform(Line& target, const Transform& t) const
 {
     target.m_p0.setMultiply(t, m_p0);
     target.m_p1.setMultiply(t, m_p1);
     return target;
+}
+
+void Line::DebugDraw() const
+{
+	SDL_Point pts[2];
+	pts[0].x = (int)m_p0.x;
+	pts[0].y = (int)m_p0.y;
+	pts[1].x = (int)m_p1.x;
+	pts[1].y = (int)m_p1.y;
+	Renderer->AddToColliderDrawBuffer(pts, 2, 255, 0, 0);
 }
 
 bool inside(const AABB& b0, const fVector& p1)
