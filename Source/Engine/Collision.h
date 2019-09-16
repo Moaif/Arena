@@ -23,7 +23,7 @@ struct OBB
 
     OBB& transform(OBB& target, const Transform& t) const;
     OBB transform(const Transform& t) const { OBB res; return transform(res, t); }
-	void DebugDraw() const;
+	void DebugDraw(const Transform& transform) const;
 };
 
 struct AABB
@@ -35,7 +35,7 @@ struct AABB
 
     OBB& transform(OBB& target, const Transform& t) const;
     OBB transform(const Transform& t) const { OBB res; return transform(res, t); }
-	void DebugDraw() const;
+	void DebugDraw(const Transform& transform) const;
 };
 
 struct Circle
@@ -48,7 +48,7 @@ struct Circle
 
     Circle& transform(Circle& target, const Transform& t) const;
     Circle transform(const Transform& t) const { Circle res; return transform(res, t); }
-	void DebugDraw() const;
+	void DebugDraw(const Transform& transform) const;
 };
 
 struct Line
@@ -60,7 +60,7 @@ struct Line
 
     Line& transform(Line& target, const Transform& t) const;
     Line transform(const Transform& t) const { Line res; return transform(res, t); }
-	void DebugDraw() const;
+	void DebugDraw(const Transform& transform) const;
 };
 
 fVector closestPoint(const Line& l0, fVector p);
@@ -105,7 +105,7 @@ public:
 
     virtual bool intersect(const BaseShape& other) const = 0;
 
-	virtual void DebugDraw() const = 0;
+	virtual void DebugDraw(const Transform& transform) const = 0;
 };
 
 template <class S>
@@ -157,9 +157,9 @@ public:
         return other.intersect(m_Shape);
     }
 
-	virtual void DebugDraw() const
+	virtual void DebugDraw(const Transform& transform) const
 	{
-		m_Shape.DebugDraw();
+		m_Shape.DebugDraw(transform);
 	}
 };
 

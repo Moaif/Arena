@@ -75,10 +75,8 @@ update_status ModuleCollision::Update()
 
 void ModuleCollision::DebugDraw()const
 {
-	LOG("Before Loop");
 	for (list<ColliderComponent*>::const_iterator it = colliders.cbegin(); it != colliders.cend(); ++it)
 		if ((*it)->IsActive()) {
-			LOG("Loop");
 			(*it)->DebugDraw();
 		}
 }

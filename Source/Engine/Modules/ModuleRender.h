@@ -45,12 +45,12 @@ struct BlitStruct
 
 struct ColliderBlitStruct
 {
-	const SDL_Point* points;
 	int count;
 	Uint8 r;
 	Uint8 g;
 	Uint8 b;
 	Uint8 a;
+	std::vector<SDL_Point> points;
 };
 
 struct CompareLayer {
@@ -78,8 +78,8 @@ public:
 	bool DirectPrint(const Font* font,const  float& x,const float& y,const std::string& message, float fontSize = 1);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 	bool DrawQuads(const SDL_Rect rects[],const int& count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-	void DrawLines(const SDL_Point* points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-	void AddToColliderDrawBuffer(const SDL_Point* points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
+	void DrawLines(SDL_Point* points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+	void AddToColliderDrawBuffer(SDL_Point* points, int count, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
 
 	SDL_Renderer* GetRenderer()const{return m_renderer;};
 

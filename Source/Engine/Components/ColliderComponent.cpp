@@ -49,7 +49,7 @@ bool ColliderComponent::CheckCollision(const ColliderComponent & other) const
 
 void ColliderComponent::DebugDraw()const
 {
-	m_shape->DebugDraw();
+	m_shape->DebugDraw(GetGameObject()->GetWorldTransform());
 }
 
 void ColliderComponent::SetOriginalShape(BaseShape * shape)

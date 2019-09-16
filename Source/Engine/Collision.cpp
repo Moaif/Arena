@@ -12,7 +12,7 @@ OBB& AABB::transform(OBB& target, const Transform& t) const
     return target;
 }
 
-void AABB::DebugDraw() const
+void AABB::DebugDraw(const Transform& transform) const
 {
 	SDL_Point pts[5];
 	pts[0].x = (int)m_min.x;
@@ -35,7 +35,7 @@ OBB& OBB::transform(OBB& target, const Transform& t) const
     return target;
 }
 
-void OBB::DebugDraw() const
+void OBB::DebugDraw(const Transform& transform) const
 {
 	SDL_Point pts[5];
 	fVector p = m_transform * -vec2One;
@@ -57,13 +57,12 @@ void OBB::DebugDraw() const
 Circle& Circle::transform(Circle& target, const Transform& t) const
 {
     fVector scale = t.getScale();
-    ASSERT(EQEPSILON(scale.x, scale.y, EPS),"Not equals to epsilon in tranform scale");
     target.m_center.setMultiply(t, m_center);
     target.m_radius = m_radius * scale.x;
     return target;
 }
 
-void Circle::DebugDraw() const
+void Circle::DebugDraw(const Transform& transform) const
 {
 	const int circleDefinition = 21;
 	SDL_Point pts[circleDefinition];
@@ -83,7 +82,7 @@ Line& Line::transform(Line& target, const Transform& t) const
     return target;
 }
 
-void Line::DebugDraw() const
+void Line::DebugDraw(const Transform& transform) const
 {
 	SDL_Point pts[2];
 	pts[0].x = (int)m_p0.x;
