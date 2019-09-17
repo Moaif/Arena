@@ -7,4 +7,5 @@ class Player : public GameObject
 public:
 	bool Start() override;
 	update_status Update()override;
+	virtual void OnCollision(ColliderComponent& other)override;
 };

@@ -32,6 +32,8 @@ bool Player::Start()
 	static_cast<Shape<AABB>*>(collider->GetOriginalShape())->m_Shape = AABB(fVector(-20,-20),fVector(20,20));
 	//collider->SetOriginalShape(new Shape<Circle>());
 	//static_cast<Shape<Circle>*>(collider->GetOriginalShape())->m_Shape = Circle(fVector(0,0), 100);
+	//collider->SetOriginalShape(new Shape<Line>());
+	//static_cast<Shape<Line>*>(collider->GetOriginalShape())->m_Shape = Line(fVector(-20, -20), fVector(20, 20));
 	collider->SetCollisionType(CollisionType::PLAYER);
 
 	return ret;
@@ -59,4 +61,9 @@ update_status Player::Update()
 	}
 
 	return ret;
+}
+
+void Player::OnCollision(ColliderComponent & other)
+{
+	
 }

@@ -109,5 +109,12 @@ const Transform & GameObject::GetWorldTransform()
 
 void GameObject::SetWorldTransform(const Transform & transform)
 {
-	m_localTransfrom = transform * parent->GetWorldTransform().getInverse();
+	if(parent)
+	{
+		m_localTransfrom = transform * parent->GetWorldTransform().getInverse();
+	}
+	else
+	{
+		m_localTransfrom = transform;
+	}
 }

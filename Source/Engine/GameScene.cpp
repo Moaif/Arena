@@ -83,4 +83,6 @@ GameObject * GameScene::Instantiate(const string & className, fVector position, 
 	{
 		g->SetParent(*parent);
 	}
+
+	return g;
 }

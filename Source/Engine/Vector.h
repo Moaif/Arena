@@ -240,14 +240,15 @@ public:
 		return fVector(m[0][2], m[1][2]);
 	}
 
+	//Rotation is set clockwise regarding the SetMult funcion which takes vectors as columns
 	inline Transform setRotation(float angleDegree)
 	{
 		fVector scale = getScale();
 		float c = cosf(DegreesToRadians(angleDegree));
 		float s = sinf(DegreesToRadians(angleDegree));
 		m[0][0] = c * scale.x;
-		m[0][1] = -s * scale.x;
-		m[1][0] = s * scale.y;
+		m[0][1] = s * scale.x;
+		m[1][0] = -s * scale.y;
 		m[1][1] = c * scale.y;
 		return *this;
 	}
@@ -261,10 +262,10 @@ public:
 
 	inline float getRotation() const
 	{
-		float scaleX = getScale().x;
-		float angleRadian = acosf(m[0][0] / scaleX);
-		if(m[1][0] < -EPS)
-			angleRadian = 2 * (float)M_PI - angleRadian;
+		fVector scale = getScale();
+		float angleRadian = atan2f( m[0][1] / scale.y, m[0][0]/scale.x);
+		if(angleRadian < 0)
+			angleRadian = 2 * static_cast<float>(M_PI) + angleRadian;
 		return RandiansToDegrees(angleRadian);
 	};
 
@@ -301,11 +302,11 @@ public:
 
 	inline fVector Right()
 	{
-		return fVector(m[0][0],m[0][1]);
+		return fVector(m[0][0],-m[0][1]);
 	}
 
 	inline fVector Forward(){
-		return fVector(m[1][0],m[1][1]);
+		return fVector(-m[1][0],m[1][1]);
 	}
 
 	inline Transform& setMultiply(const Transform& t0, const Transform& t1)
