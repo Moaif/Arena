@@ -163,7 +163,7 @@ public:
 		return Vector(y, -x);
 	}
 
-	inline Vector normalize() const
+	inline Vector normalize()
 	{
 		float length = getLength();
 		if(length == 0.f) return Vector(1.f, 0);

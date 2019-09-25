@@ -3,6 +3,7 @@
 #include "Module.h"
 #include <SDL.h>
 #include "../Components/ColliderComponent.h"
+#include <set>
 
 class GameObject;
 
@@ -13,17 +14,20 @@ public:
 	ModuleCollision();
 	~ModuleCollision();
 
-	update_status Update()override;
+	update_status PreUpdate() override;
+	update_status Update() override;
 
 	bool CleanUp()override;
 
 	void SubscribeCollider(ColliderComponent& collider);
 	void UnsubscribeCollider(ColliderComponent& collider);
 	void DebugDraw()const;
+	void MoveOutOfBounds(ColliderComponent& col1, ColliderComponent& col2);
 
 private:
 
-	std::list<ColliderComponent*> colliders;
-	bool debug = false;
-	bool hits[MAX][MAX];
+	std::list<ColliderComponent*> m_colliders;
+	std::set<std::pair<ColliderComponent*, ColliderComponent*>> m_collidingTriggers;
+	bool m_debug = false;
+	bool m_hits[MAX][MAX];
 };

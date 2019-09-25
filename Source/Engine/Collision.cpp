@@ -136,6 +136,11 @@ bool intersect(const AABB& b0, const AABB& b1)
              b0.m_min.y > b1.m_max.y || b0.m_max.y < b1.m_min.y);
 }
 
+fVector push(const AABB & b0, const AABB & b1)
+{
+	return fVector();
+}
+
 // returns true of the OBB is completely on one side of one of AABB's borders.
 bool outside(const AABB& b0, const OBB& o1)
 {
@@ -166,11 +171,21 @@ bool intersect(const AABB& b0, const OBB& o1)
     return !outside(aabbUnit, o0Inv);
 }
 
+fVector push(const AABB & b0, const OBB & o1)
+{
+	return fVector();
+}
+
 bool intersect(const AABB& b0, const Circle& c1)
 {
     fVector closest(CLAMP(b0.m_min.x, b0.m_max.x, c1.m_center.x),
 		CLAMP(b0.m_min.y, b0.m_max.y, c1.m_center.y));
     return (closest - c1.m_center).getLengthSq() <= sqrt(c1.m_radius);
+}
+
+fVector push(const AABB & b0, const Circle & c1)
+{
+	return fVector();
 }
 
 bool intersect(const AABB& b0, const Line& l1)
@@ -192,10 +207,20 @@ bool intersect(const AABB& b0, const Line& l1)
     return intersect(diag, l1);
 }
 
+fVector push(const AABB & b0, const Line & l1)
+{
+	return fVector();
+}
+
 bool intersect(const OBB& o0, const OBB& o1)
 {
     OBB o1Inv = o1.transform(o0.m_transform.getInverse());
     return intersect(aabbUnit, o1Inv);
+}
+
+fVector push(const OBB & o0, const OBB & o1)
+{
+	return fVector();
 }
 
 bool intersect(const OBB& o0, const Circle& c1)
@@ -211,10 +236,20 @@ bool intersect(const OBB& o0, const Circle& c1)
     return intersect(b0, c1.transform(transform));
 }
 
+fVector push(const OBB & o0, const Circle & c1)
+{
+	return fVector();
+}
+
 bool intersect(const OBB& o0, const Line& l1)
 {
     Line l1Inv = l1.transform(o0.m_transform.getInverse());
     return intersect(aabbUnit, l1Inv);
+}
+
+fVector push(const OBB & o0, const Line & l1)
+{
+	return fVector();
 }
 
 bool intersect(const Circle& c0, const Circle& c1)
@@ -222,10 +257,22 @@ bool intersect(const Circle& c0, const Circle& c1)
     return (c1.m_center - c0.m_center).getLengthSq() <= sqrt(c1.m_radius + c0.m_radius);
 }
 
+fVector push(const Circle & c0, const Circle & c1)
+{
+	float toMove = (c1.m_center - c0.m_center).getLengthSq() <= sqrt(c1.m_radius + c0.m_radius);
+	fVector director = (c1.m_center - c0.m_center).normalize();
+	return c1.m_center+director*toMove;
+}
+
 bool intersect(const Circle& c0, const Line& l1)
 {
 	fVector closest = closestPoint(l1, c0.m_center);
     return (closest - c0.m_center).getLengthSq() <= sqrt(c0.m_radius);
+}
+
+fVector push(const Circle & c0, const Line & l1)
+{
+	return fVector();
 }
 
 bool intersect(const Line& l0, const Line& l1)
@@ -252,4 +299,9 @@ bool intersect(const Line& l0, const Line& l1)
 	fVector v0n = v0.getPerp();
     float t1 = (l0.m_p0 - l1.m_p0).dot(v0n) / v1.dot(v0n);
     return 0.0f <= t1 && t1 <= 1.0f;
+}
+
+fVector push(const Line & l0, const Line & l1)
+{
+	return fVector();
 }

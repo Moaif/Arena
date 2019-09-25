@@ -6,7 +6,7 @@
 RTTI_REGISTER(ColliderComponent)
 
 ColliderComponent::ColliderComponent(BaseShape * originalShape): m_originalShape(originalShape),
-m_shape(nullptr), m_collisionType(CollisionType::DEFAULT)
+m_shape(nullptr), m_collisionType(CollisionType::DEFAULT), m_isTrigger(false)
 {
 }
 
@@ -45,6 +45,15 @@ bool ColliderComponent::CheckCollision(const ColliderComponent & other) const
 		return false;
 	}
 	return m_shape->intersect(*other.m_shape);
+}
+
+fVector ColliderComponent::PushCollider(const ColliderComponent & other) const
+{
+	if(!other.m_shape || !m_shape)
+	{
+		return other.GetGameObject()->GetWorldTransform().getPosition();
+	}
+	return m_shape->push(*other.m_shape);
 }
 
 void ColliderComponent::DebugDraw()const

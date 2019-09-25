@@ -26,6 +26,10 @@ public:
 
 	virtual void OnCollision(ColliderComponent& other) {};
 
+	virtual void OnTriggerEnter(ColliderComponent& other){};
+	virtual void OnTriggerExit(ColliderComponent& other){};
+	virtual void OnTriggerStay(ColliderComponent& other){};
+
 	void Destroy(){SetToDelete(true);};
 
 	Component* AddComponent(const std::string& className);

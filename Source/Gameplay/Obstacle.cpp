@@ -20,10 +20,10 @@ bool Obstacle::Start()
 
 	//Collider component
 	ColliderComponent* collider = dynamic_cast<ColliderComponent*>(AddComponent("ColliderComponent"));
-	collider->SetOriginalShape(new Shape<AABB>());
-	static_cast<Shape<AABB>*>(collider->GetOriginalShape())->m_Shape = AABB(fVector(-25, -25), fVector(25, 25));
-	//collider->SetOriginalShape(new Shape<Circle>());
-	//static_cast<Shape<Circle>*>(collider->GetOriginalShape())->m_Shape = Circle(fVector(0,0), 100);
+	//collider->SetOriginalShape(new Shape<AABB>());
+	//static_cast<Shape<AABB>*>(collider->GetOriginalShape())->m_Shape = AABB(fVector(-25, -25), fVector(25, 25));
+	collider->SetOriginalShape(new Shape<Circle>());
+	static_cast<Shape<Circle>*>(collider->GetOriginalShape())->m_Shape = Circle(fVector(0,0), 100);
 	//collider->SetOriginalShape(new Shape<Line>());
 	//static_cast<Shape<Line>*>(collider->GetOriginalShape())->m_Shape = Line(fVector(-20, -20), fVector(20, 20));
 	collider->SetCollisionType(CollisionType::OBSTACLE);
