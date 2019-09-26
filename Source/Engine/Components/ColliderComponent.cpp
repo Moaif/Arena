@@ -6,7 +6,7 @@
 RTTI_REGISTER(ColliderComponent)
 
 ColliderComponent::ColliderComponent(BaseShape * originalShape): m_originalShape(originalShape),
-m_shape(nullptr), m_collisionType(CollisionType::DEFAULT), m_isTrigger(false)
+m_shape(nullptr), m_collisionType(CollisionType::DEFAULT), m_isTrigger(false), m_isStatic(false)
 {
 }
 
@@ -21,16 +21,6 @@ bool ColliderComponent::Init()
 	return ret;
 }
 
-update_status ColliderComponent::Update()
-{
-	update_status ret = Component::Update();
-	if(m_shape)
-	{
-		m_originalShape->transform(m_shape,GetGameObject()->GetWorldTransform());
-	}
-	return ret;
-}
-
 bool ColliderComponent::CleanUp()
 {
 	bool ret = Component::CleanUp();
@@ -38,22 +28,24 @@ bool ColliderComponent::CleanUp()
 	return ret;
 }
 
-bool ColliderComponent::CheckCollision(const ColliderComponent & other) const
+void ColliderComponent::UpdateCollisionTransform()
+{
+	if(m_shape)
+	{
+		m_originalShape->transform(m_shape, GetGameObject()->GetWorldTransform());
+	}
+}
+
+bool ColliderComponent::CheckCollision(ColliderComponent & other) 
 {
 	if(!other.m_shape || !m_shape)
 	{
 		return false;
 	}
-	return m_shape->intersect(*other.m_shape);
-}
 
-fVector ColliderComponent::PushCollider(const ColliderComponent & other) const
-{
-	if(!other.m_shape || !m_shape)
-	{
-		return other.GetGameObject()->GetWorldTransform().getPosition();
-	}
-	return m_shape->push(*other.m_shape);
+	UpdateCollisionTransform();
+	other.UpdateCollisionTransform();
+	return m_shape->intersect(*other.m_shape);
 }
 
 void ColliderComponent::DebugDraw()const

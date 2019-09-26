@@ -8,6 +8,8 @@
 
 using namespace std;
 
+static const float OUT_OF_BOUNDS_MOVE_SPEED = 1.0f;
+
 ModuleCollision::ModuleCollision()
 {
 	m_hits[DEFAULT][DEFAULT] = true;
@@ -100,7 +102,7 @@ update_status ModuleCollision::Update()
 								//If trigger collision
 								if((*it)->GetIsTrigger() || (*it2)->GetIsTrigger())
 								{
-								std:pair<ColliderComponent*, ColliderComponent*> pair = std::pair<ColliderComponent*, ColliderComponent*>((*it), (*it2));
+								pair<ColliderComponent*, ColliderComponent*> pair = std::pair<ColliderComponent*, ColliderComponent*>((*it), (*it2));
 									if(!m_collidingTriggers.count(pair))//If not already colliding
 									{
 										(*it)->GetGameObject()->OnTriggerEnter(*(*it2));
@@ -147,8 +149,34 @@ void ModuleCollision::DebugDraw()const
 
 void ModuleCollision::MoveOutOfBounds(ColliderComponent & col1, ColliderComponent & col2)
 {
-	Transform temp = col2.GetGameObject()->GetWorldTransform();
-	col2.GetGameObject()->SetWorldTransform(temp.setPosition(col1.PushCollider(col2)));
+	GameObject* g1 = col1.GetGameObject();
+	GameObject* g2 = col2.GetGameObject();
+
+	while(col1.CheckCollision(col2))//While colliding, move out of bounds
+	{
+		Transform t1 = g1->GetWorldTransform();
+		Transform t2 = g2->GetWorldTransform();
+		fVector pos1 = t1.getPosition();
+		fVector pos2 = t2.getPosition();
+		fVector director = (pos2 - pos1).normalize();
+		//Decide which object to move based on static colliders
+		if(col1.GetIsStatic())
+		{
+			t2.setPosition(pos2 + director * OUT_OF_BOUNDS_MOVE_SPEED * Time->GetDeltaTime());
+		}
+		else if(col2.GetIsStatic())
+		{
+			t1.setPosition(pos1 - director * OUT_OF_BOUNDS_MOVE_SPEED * Time->GetDeltaTime());
+		}
+		else
+		{
+			t1.setPosition(pos1 - director * OUT_OF_BOUNDS_MOVE_SPEED/2 * Time->GetDeltaTime());
+			t2.setPosition(pos2 + director * OUT_OF_BOUNDS_MOVE_SPEED/2 * Time->GetDeltaTime());
+		}
+
+		g1->SetWorldTransform(t1);
+		g2->SetWorldTransform(t2);
+	}
 }
 
 bool ModuleCollision::CleanUp()

@@ -71,40 +71,24 @@ bool inside(const Circle& c0, const fVector& p1);
 bool inside(const Line& l0, const fVector& p1);
 
 bool intersect(const AABB& b0, const AABB& b1);
-fVector push(const AABB& b0, const AABB& b1);
 bool intersect(const AABB& b0, const OBB& o1);
-fVector push(const AABB& b0, const OBB& o1);
 bool intersect(const AABB& b0, const Circle& c1);
-fVector push(const AABB& b0, const Circle& c1);
 bool intersect(const AABB& b0, const Line& l1);
-fVector push(const AABB& b0, const Line& l1);
 
 bool intersect(const OBB& o0, const OBB& o1);
-fVector push(const OBB& o0, const OBB& o1);
 bool intersect(const OBB& o0, const Circle& c1);
-fVector push(const OBB& o0, const Circle& c1);
 bool intersect(const OBB& o0, const Line& l1);
-fVector push(const OBB& o0, const Line& l1);
 inline bool intersect(const OBB& o0, const AABB& b1) { return intersect(b1, o0); }
-inline fVector push(const OBB& o0, const AABB& b1){ return push(b1,o0); }
 
 bool intersect(const Circle& c0, const Circle& c1);
-fVector push(const Circle& c0, const Circle& c1);
 bool intersect(const Circle& c0, const Line& l1);
-fVector push(const Circle& c0, const Line& l1);
 inline bool intersect(const Circle& c0, const AABB& b1) { return intersect(b1, c0); }
-inline fVector push(const Circle& c0, const AABB& b1){ return push(b1,c0); }
 inline bool intersect(const Circle& c0, const OBB& o1) { return intersect(o1, c0); }
-inline fVector push(const Circle& c0, const OBB& o1){ return push(o1,c0); }
 
 bool intersect(const Line& l0, const Line& l1);
-fVector push(const Line& l0, const Line& l1);
 inline bool intersect(const Line& l0, const AABB& b1) { return intersect(b1, l0); }
-inline fVector push(const Line& l0, const AABB& b1){ return push(b1,l0); }
 inline bool intersect(const Line& l0, const OBB& o1) { return intersect(o1, l0); }
-inline fVector push(const Line& l0, const OBB& o1){ return push(o1,l0); }
 inline bool intersect(const Line& l0, const Circle& c1) { return intersect(c1, l0); }
-inline fVector push(const Line& l0, const Circle& c1){ return push(c1,l0); }
 
 
 class BaseShape {
@@ -115,16 +99,11 @@ public:
     virtual bool inside(const fVector& p1) const = 0;
 
     virtual bool intersect(const AABB& b1) const = 0;
-	virtual fVector push(const AABB& b1) const = 0;
     virtual bool intersect(const OBB& o1) const = 0;
-	virtual fVector push(const OBB& o1) const = 0;
     virtual bool intersect(const Circle& c1) const = 0;
-	virtual fVector push(const Circle& c1) const = 0;
     virtual bool intersect(const Line& l1) const = 0;
-	virtual fVector push(const Line& l1) const = 0;
 
     virtual bool intersect(const BaseShape& other) const = 0;
-	virtual fVector push(const BaseShape& other) const = 0;
 
 	virtual void DebugDraw(const Transform& transform) const = 0;
 };
@@ -158,50 +137,25 @@ public:
         return ::intersect(m_Shape, b1);
     }
 
-	virtual fVector push(const AABB& b1) const
-	{
-		return ::push(m_Shape, b1);
-	}
-
     virtual bool intersect(const OBB& o1) const
     {
         return ::intersect(m_Shape, o1);
     }
-
-	virtual fVector push(const OBB& o1) const
-	{
-		return ::push(m_Shape, o1);
-	}
 
     virtual bool intersect(const Circle& c1) const
     {
         return ::intersect(m_Shape, c1);
     }
 
-	virtual fVector push(const Circle& c1) const
-	{
-		return ::push(m_Shape, c1);
-	}
-
     virtual bool intersect(const Line& l1) const
     {
         return ::intersect(m_Shape, l1);
     }
 
-	virtual fVector push(const Line& l1) const
-	{
-		return ::push(m_Shape, l1);
-	}
-
     virtual bool intersect(const BaseShape& other) const
     {
         return other.intersect(m_Shape);
     }
-
-	virtual fVector push(const BaseShape& other) const
-	{
-		return other.push(m_Shape);
-	}
 
 	virtual void DebugDraw(const Transform& transform) const
 	{

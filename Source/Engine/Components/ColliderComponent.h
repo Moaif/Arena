@@ -19,11 +19,10 @@ public:
 	ColliderComponent(BaseShape * originalShape = nullptr);
 
 	virtual bool Init()override;
-	virtual update_status Update()override;
 	virtual bool CleanUp() override;
 
-	bool CheckCollision(const ColliderComponent& other) const;
-	fVector PushCollider(const ColliderComponent& other) const;
+	void UpdateCollisionTransform();
+	bool CheckCollision(ColliderComponent& other);
 	void DebugDraw()const;
 
 	CollisionType GetCollisionType()const{return m_collisionType;};
@@ -32,12 +31,16 @@ public:
 	bool GetIsTrigger()const {return m_isTrigger;};
 	void SetIsTrigger(bool value){m_isTrigger = value;};
 
+	bool GetIsStatic() const {return m_isStatic;};
+	void SetIsStatic(bool value) {m_isStatic = value;};
+
 	BaseShape* GetOriginalShape()const{return m_originalShape;};
 	void SetOriginalShape(BaseShape* shape);
 
 private:
 	CollisionType m_collisionType;
 	bool m_isTrigger;
+	bool m_isStatic;
 	BaseShape* m_originalShape;
 	BaseShape* m_shape;
 };
