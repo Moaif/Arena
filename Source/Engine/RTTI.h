@@ -3,6 +3,7 @@
 #include <map>
 #include <algorithm>
 #include <assert.h>
+#include <string>
 
 template <class A, class B>
 struct SameType { static const bool value = false; };

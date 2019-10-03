@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <SDL.h>
+#include <string>
 
 class Font {
 public:
