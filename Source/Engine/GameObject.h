@@ -36,11 +36,16 @@ public:
 	template<class TYPE> 
 	TYPE* GetComponent();
 
-	GameObject* GetParent()const{return parent;};
+	GameObject* Instantiate(const std::string& className) { return m_currentScene->Instantiate(className); };
+	GameObject* Instantiate(const std::string& className, fVector position, float angle = 0, GameObject * parent = nullptr) { return m_currentScene->Instantiate(className,position,angle,parent); };
+
+	GameScene* GetGameScene()const{return m_currentScene;};
+	void SetGameScene(GameScene* gameScene){m_currentScene = gameScene;};
+	GameObject* GetParent()const{return m_parent;};
 	void SetParent(GameObject& newParent);
-	std::list<GameObject*>& GetChildren(){return children;};
-	void AddChild(GameObject& child){children.push_back(&child);};
-	void RemoveChild(GameObject& child){children.remove(&child);};
+	std::list<GameObject*>& GetChildren(){return m_children;};
+	void AddChild(GameObject& child){m_children.push_back(&child);};
+	void RemoveChild(GameObject& child){m_children.remove(&child);};
 	bool IsActive()const {return m_active;};
 	void SetActive(bool value){m_active = value;};
 	bool IsReadyToDelete()const{return m_toDelete;};
@@ -60,8 +65,9 @@ protected:
 	friend GameObject* GameScene::Instantiate(const std::string& className); //This will be the constructor of this class
 
 private:
-	GameObject* parent = nullptr;
-	std::list<GameObject*> children;
+	GameScene* m_currentScene = nullptr;
+	GameObject* m_parent = nullptr;
+	std::list<GameObject*> m_children;
 	bool m_toDelete = false;
 	bool m_active = true;
 	Transform m_localTransfrom;

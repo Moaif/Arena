@@ -69,6 +69,7 @@ GameObject * GameScene::Instantiate(const string & className)
 	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
 	GameObject* gameObject = rtti.createInstance<GameObject>();
 	m_toStartGameObjects.push_back(unique_ptr<GameObject>(gameObject));
+	gameObject->SetGameScene(this);
 	return m_toStartGameObjects.back().get();
 }
 

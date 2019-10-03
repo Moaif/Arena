@@ -66,6 +66,11 @@ update_status Player::Update()
 		collider->SetIsTrigger(!collider->GetIsTrigger());
 	}
 
+	if (Input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) 
+	{
+		Instantiate("Obstacle",fVector(-50,-50));
+	}
+
 	return ret;
 }
 

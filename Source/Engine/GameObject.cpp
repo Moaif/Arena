@@ -76,9 +76,9 @@ Component* GameObject::AddComponent(const string& className)
 void GameObject::SetParent(GameObject & newParent)
 {
 	m_localTransfrom = newParent.GetWorldTransform().getInverse() * GetWorldTransform();
-	parent->RemoveChild(*this);
-	parent = &newParent;
-	parent->AddChild(*this);
+	m_parent->RemoveChild(*this);
+	m_parent = &newParent;
+	m_parent->AddChild(*this);
 }
 
 bool GameObject::SetToDelete(bool value)
@@ -95,23 +95,23 @@ bool GameObject::SetToDelete(bool value)
 
 const Transform & GameObject::GetWorldTransform()
 {
-	if(!parent)
+	if(!m_parent)
 	{
 		m_worldTransform = m_localTransfrom;
 	}
 	else
 	{
 		//Recursive call that gets to the root parent
-		m_worldTransform = m_localTransfrom * parent->GetWorldTransform();
+		m_worldTransform = m_localTransfrom * m_parent->GetWorldTransform();
 	}
 	return m_worldTransform;
 }
 
 void GameObject::SetWorldTransform(const Transform & transform)
 {
-	if(parent)
+	if(m_parent)
 	{
-		m_localTransfrom = transform * parent->GetWorldTransform().getInverse();
+		m_localTransfrom = transform * m_parent->GetWorldTransform().getInverse();
 	}
 	else
 	{
