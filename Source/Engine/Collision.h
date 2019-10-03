@@ -41,7 +41,7 @@ struct AABB
 struct Circle
 {
 	fVector m_center;
-    float m_radius;
+    float m_radius = 0.0f;
 
     Circle() {}
     Circle(const fVector& center, float radius): m_center(center), m_radius(radius) {}

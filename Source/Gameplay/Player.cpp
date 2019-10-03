@@ -4,11 +4,13 @@
 #include "../Engine/Modules/ModuleTextures.h"
 #include "../Engine/Modules/ModuleInput.h"
 #include "../Engine/Modules/ModuleTime.h"
+#include "Game.h"
 
 RTTI_REGISTER(Player)
 
-const float angleToRotate = 1;
-const float speed = 10;
+const int InitLives = 3;
+const float Speed = 700;
+const float ShootCD = 0.5f;
 
 bool Player::Start()
 {
@@ -17,24 +19,22 @@ bool Player::Start()
 	//Render component
 	RendererComponent* renderer = dynamic_cast<RendererComponent*>(AddComponent("RendererComponent"));
 	Animation anim = Animation();
-	anim.frames.push_back({ 4, 4, 20, 47 });
-	anim.frames.push_back({ 25, 4, 20, 47 });
-	anim.frames.push_back({ 49, 2, 25, 49 });
-	anim.frames.push_back({ 75, 3, 21, 47 });
-	anim.speed = 5.0f;
-	anim.texture = Textures->Load("assets/character.png");
+	anim.frames.push_back({ 0, 0, 256, 256 });
+	anim.texture = Textures->Load("assets/Spaceship.png");
 	ASSERT(anim.texture, AT("Player failed on loading it's textures"));
-	renderer->AddAnimation("run",anim);
+	renderer->AddAnimation("Basic",anim);
 
 	//Collider component
 	ColliderComponent* collider = dynamic_cast<ColliderComponent*>(AddComponent("ColliderComponent"));
 	collider->SetOriginalShape(new Shape<AABB>());
-	static_cast<Shape<AABB>*>(collider->GetOriginalShape())->m_Shape = AABB(fVector(-20,-20),fVector(20,20));
-	//collider->SetOriginalShape(new Shape<Circle>());
-	//static_cast<Shape<Circle>*>(collider->GetOriginalShape())->m_Shape = Circle(fVector(0,0), 100);
-	//collider->SetOriginalShape(new Shape<Line>());
-	//static_cast<Shape<Line>*>(collider->GetOriginalShape())->m_Shape = Line(fVector(-20, -20), fVector(20, 20));
+	static_cast<Shape<AABB>*>(collider->GetOriginalShape())->m_Shape = AABB(fVector(-128,-128),fVector(128,128));
 	collider->SetCollisionType(CollisionType::PLAYER);
+	collider->SetIsTrigger(true);
+
+	GetLocalTransform().setScale(fVector(INVADERS_SCALE, INVADERS_SCALE));
+
+	m_remainingLives = InitLives;
+	m_shootTimer = 0;
 
 	return ret;
 }
@@ -45,51 +45,30 @@ update_status Player::Update()
 
 	if(Input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 	{
-		GetLocalTransform().rotate(angleToRotate);
+		if(GetWorldTransform().getPosition().x < SCREEN_WIDTH/2)
+			GetLocalTransform().translate(GetLocalTransform().Right() * Speed * Time->GetDeltaTime());
 	}
 	else if(Input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 	{
-		GetLocalTransform().rotate(-angleToRotate);
-	}
-	else if(Input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		GetLocalTransform().translate(GetLocalTransform().Forward()*-speed);
-	}
-	else if(Input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
-		GetLocalTransform().translate(GetLocalTransform().Forward()*speed);
+		if (GetWorldTransform().getPosition().x > -SCREEN_WIDTH / 2)
+			GetLocalTransform().translate(GetLocalTransform().Right() * -Speed *Time->GetDeltaTime());
 	}
 
-	if(Input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
+	if (Input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && m_shootTimer <= 0) 
 	{
-		ColliderComponent* collider = GetComponent<ColliderComponent>();
-		collider->SetIsTrigger(!collider->GetIsTrigger());
+		Instantiate("PlayerShoot",GetWorldTransform().getPosition());
+		m_shootTimer = ShootCD;
 	}
-
-	if (Input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) 
-	{
-		Instantiate("Obstacle",fVector(-50,-50));
-	}
+	m_shootTimer -= Time->GetDeltaTime();
 
 	return ret;
 }
 
-void Player::OnCollision(ColliderComponent & other)
-{
-	LOG("Collision");
-}
-
 void Player::OnTriggerEnter(ColliderComponent & other)
 {
-	LOG("Trigger Enter");
-}
-
-void Player::OnTriggerExit(ColliderComponent & other)
-{
-	LOG("Trigger Exit");
-}
-
-void Player::OnTriggerStay(ColliderComponent & other)
-{
-	LOG("Trigger Stay");
+	if (--m_remainingLives == 0) {
+		Game* castedScene = dynamic_cast<Game*>(GetGameScene());
+		ASSERT(castedScene, "error can't cast currentGameScene to \"Game\" scene");
+		castedScene->EndLevel();
+	}
 }

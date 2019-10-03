@@ -85,10 +85,10 @@ class RTTIRepo
 public:
     struct TypeInfo 
     {
-        const char* m_className;
-        RTTIInfo::TypeId m_typeId;
+        const char* m_className = "";
+        RTTIInfo::TypeId m_typeId = 0;
         RTTIInfo m_base;
-        RTTIInfo::CreateFn m_createFn;
+        RTTIInfo::CreateFn m_createFn = nullptr;
     };
 
     RTTIInfo getOrRegister(const char* className, RTTIInfo baseClass, RTTIInfo::CreateFn createFn)

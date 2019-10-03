@@ -26,7 +26,7 @@ public:
 	bool IsActive()const {return m_active;};
 	void SetActive(bool value){m_active = value;};
 	bool IsReadyToDelete()const{return m_toDelete;};
-	bool SetToDelete(bool value = true){m_toDelete = value;};
+	void SetToDelete(bool value = true){m_toDelete = value;};
 private:
 	GameObject* m_gameObject = nullptr;
 	bool m_toDelete = false;

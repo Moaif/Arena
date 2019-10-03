@@ -18,8 +18,8 @@ enum class Layer
 };
 
 struct ResizeStruct {
-	int w;
-	int h;
+	int w = 0;
+	int h = 0;
 	ResizeStruct(){}
 	ResizeStruct(int w, int h) : w(w), h(h){}
 
@@ -55,7 +55,7 @@ struct ColliderBlitStruct
 
 struct CompareLayer {
 	bool operator()(BlitStruct const & p1, BlitStruct const & p2) {
-		return p1.layer < p2.layer;
+		return p1.layer > p2.layer;
 	}
 };
 

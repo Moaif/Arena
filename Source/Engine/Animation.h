@@ -14,7 +14,7 @@ public:
 	bool inversed = false;
 	float speed = 1.0f;
 	vector<SDL_Rect> frames;
-	SDL_Texture* texture;
+	SDL_Texture* texture=nullptr;
 
 private:
 	int m_currentFrame = 0;

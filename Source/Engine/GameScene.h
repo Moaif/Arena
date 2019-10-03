@@ -21,7 +21,7 @@ public:
 	virtual bool Start(){return true;};
 	virtual update_status PreUpdate();
 	virtual update_status Update();
-	virtual bool CleanUp(){return true;};
+	virtual bool CleanUp();
 
 	GameObject* Instantiate(const std::string& className);
 	GameObject* Instantiate(const std::string& className,fVector position, float angle = 0, GameObject* parent = nullptr);

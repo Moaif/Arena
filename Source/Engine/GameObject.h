@@ -60,8 +60,8 @@ protected:
 	//Won't be used but dont want to allow them public
 	GameObject& operator=(const GameObject&){};
 	GameObject(const GameObject&){};
-	GameObject& operator=(GameObject&&){};
-	GameObject(GameObject&&){};
+	GameObject& operator=(GameObject&&)noexcept{};
+	GameObject(GameObject&&)noexcept{};
 	friend GameObject* GameScene::Instantiate(const std::string& className); //This will be the constructor of this class
 
 private:

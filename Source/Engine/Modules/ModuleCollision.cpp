@@ -14,32 +14,32 @@ ModuleCollision::ModuleCollision()
 {
 	m_hits[DEFAULT][DEFAULT] = true;
 	m_hits[DEFAULT][PLAYER] = true;
-	m_hits[DEFAULT][OBSTACLE] = true;
-	m_hits[DEFAULT][SHOOT] = true;
+	m_hits[DEFAULT][ENEMY_SHOOT] = true;
+	m_hits[DEFAULT][PLAYER_SHOOT] = true;
 	m_hits[DEFAULT][ENEMY] = true;
 
 	m_hits[PLAYER][DEFAULT] = true;
 	m_hits[PLAYER][PLAYER] = false;
-	m_hits[PLAYER][OBSTACLE] = true;
-	m_hits[PLAYER][SHOOT] = true;
+	m_hits[PLAYER][ENEMY_SHOOT] = true;
+	m_hits[PLAYER][PLAYER_SHOOT] = false;
 	m_hits[PLAYER][ENEMY] = true;
 
-	m_hits[OBSTACLE][DEFAULT] = true;
-	m_hits[OBSTACLE][PLAYER] = true;
-	m_hits[OBSTACLE][OBSTACLE] = true;
-	m_hits[OBSTACLE][SHOOT] = true;
-	m_hits[OBSTACLE][ENEMY] = true;
+	m_hits[ENEMY_SHOOT][DEFAULT] = true;
+	m_hits[ENEMY_SHOOT][PLAYER] = true;
+	m_hits[ENEMY_SHOOT][ENEMY_SHOOT] = false;
+	m_hits[ENEMY_SHOOT][PLAYER_SHOOT] = false;
+	m_hits[ENEMY_SHOOT][ENEMY] = false;
 
-	m_hits[SHOOT][DEFAULT] = true;
-	m_hits[SHOOT][PLAYER] = true;
-	m_hits[SHOOT][OBSTACLE] = true;
-	m_hits[SHOOT][SHOOT] = false;
-	m_hits[SHOOT][ENEMY] = true;
+	m_hits[PLAYER_SHOOT][DEFAULT] = true;
+	m_hits[PLAYER_SHOOT][PLAYER] = false;
+	m_hits[PLAYER_SHOOT][ENEMY_SHOOT] = false;
+	m_hits[PLAYER_SHOOT][PLAYER_SHOOT] = false;
+	m_hits[PLAYER_SHOOT][ENEMY] = true;
 
 	m_hits[ENEMY][DEFAULT] = true;
 	m_hits[ENEMY][PLAYER] = true;
-	m_hits[ENEMY][OBSTACLE] = true;
-	m_hits[ENEMY][SHOOT] = true;
+	m_hits[ENEMY][ENEMY_SHOOT] = false;
+	m_hits[ENEMY][PLAYER_SHOOT] = true;
 	m_hits[ENEMY][ENEMY] = false;
 }
 
@@ -93,7 +93,7 @@ update_status ModuleCollision::Update()
 
 				if((*it2)->IsActive() && (*it)->IsActive())
 				{//Needed to check again, in case that it changes inside the for loop
-					if(!((*it)->IsReadyToDelete() || (*it2)->IsReadyToDelete()))
+					if(!((*it)->IsReadyToDelete() && !(*it2)->IsReadyToDelete()))
 					{//If one collider is already set to delete, we dont check again, it exist no more
 						if((*it)->CheckCollision(*(*it2)))
 						{

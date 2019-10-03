@@ -6,8 +6,8 @@ enum CollisionType
 {
 	DEFAULT,
 	PLAYER,
-	OBSTACLE,
-	SHOOT,
+	ENEMY_SHOOT,
+	PLAYER_SHOOT,
 	ENEMY,
 	MAX
 };

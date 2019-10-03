@@ -52,11 +52,13 @@ typedef unsigned int uint;
 #endif
 
 // Configuration -----------
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 1024
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Arena"
+
+#define INVADERS_SCALE 0.25f
 
 //Audio
 #define DEFAULT_MUSIC_FADE_TIME 2.0f

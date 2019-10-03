@@ -25,17 +25,22 @@ update_status GameScene::PreUpdate()
 		}
 	}
 
-	if(!loopRet)
-	{
-		return UPDATE_ERROR;
-	}
-
-	for(vector<unique_ptr<GameObject>>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
+	for(vector<unique_ptr<GameObject>>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end() && loopRet;)
 	{
 		if((*it)->IsReadyToDelete())
 		{
+			loopRet &= (*it)->CleanUp();
 			it = m_gameObjects.erase(it);
 		}
+		else
+		{
+			++it;
+		}
+	}
+
+	if (!loopRet)
+	{
+		return UPDATE_ERROR;
 	}
 
 	update_status ret = UPDATE_CONTINUE;
@@ -59,6 +64,25 @@ update_status GameScene::Update()
 		{
 			ret = (*it)->Update();
 		}
+	}
+
+	return ret;
+}
+
+bool GameScene::CleanUp()
+{
+	bool ret = true;
+
+	for (list<unique_ptr<GameObject>>::iterator it = m_toStartGameObjects.begin(); it != m_toStartGameObjects.end() && ret;)
+	{
+		ret &= (*it)->CleanUp();
+		it = m_toStartGameObjects.erase(it);
+	}
+
+	for (vector<unique_ptr<GameObject>>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end() && ret;)
+	{
+		(*it)->CleanUp();
+		it = m_gameObjects.erase(it);
 	}
 
 	return ret;

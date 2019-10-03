@@ -7,9 +7,10 @@ class Player : public GameObject
 public:
 	bool Start() override;
 	update_status Update()override;
-	virtual void OnCollision(ColliderComponent& other)override;
 
 	virtual void OnTriggerEnter(ColliderComponent& other)override;
-	virtual void OnTriggerExit(ColliderComponent& other)override;
-	virtual void OnTriggerStay(ColliderComponent& other)override;
+
+private:
+	int m_remainingLives = 0;
+	float m_shootTimer = 0;
 };

@@ -11,7 +11,9 @@ class Vector
 {
 public:
 
-	TYPE x, y, z;
+	TYPE x = 0;
+	TYPE y = 0;
+	TYPE z = 0;
 
 	Vector()
 	{}
@@ -211,7 +213,7 @@ static float DegreesToRadians(float degreesAngle)
 class Transform
 {
 public:
-	float m[2][3];
+	float m[2][3] = {};
 
 	inline Transform(){}
 
