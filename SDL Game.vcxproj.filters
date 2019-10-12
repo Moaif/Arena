@@ -83,18 +83,6 @@
     <ClInclude Include="Source\Engine\Components\Component.h" />
     <ClInclude Include="Source\Engine\Components\RendererComponent.h" />
     <ClInclude Include="Source\Engine\Components\ColliderComponent.h" />
-    <ClInclude Include="Source\Gameplay\Player.h" />
-    <ClInclude Include="Source\Gameplay\Game.h" />
-    <ClInclude Include="Source\Gameplay\Invader.h" />
-    <ClInclude Include="Source\Gameplay\PlayerShoot.h" />
-    <ClInclude Include="Source\Gameplay\EnemyShoot.h" />
-    <ClInclude Include="Source\Gameplay\Shoot.h" />
-    <ClInclude Include="Source\Gameplay\InvaderRed.h" />
-    <ClInclude Include="Source\Gameplay\InvaderYellow.h" />
-    <ClInclude Include="Source\Gameplay\InvaderPink.h" />
-    <ClInclude Include="Source\Gameplay\InvaderBoss.h" />
-    <ClInclude Include="Source\Gameplay\Menu.h" />
-    <ClInclude Include="Source\Gameplay\BackGround.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Globals.cpp">
@@ -158,42 +146,6 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Components\RendererComponent.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Player.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Game.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Invader.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Shoot.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Menu.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\EnemyShoot.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\PlayerShoot.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\InvaderRed.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\InvaderYellow.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\InvaderPink.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\InvaderBoss.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\BackGround.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
