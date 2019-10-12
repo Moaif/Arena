@@ -6,8 +6,8 @@
 
 RTTI_REGISTER(Invader)
 
-const float HorizontalSpeed = 450.0f;
-const float VerticalSpeed = 4000.0f;
+const float HorizontalSpeed = 250.0f;
+const float VerticalSpeed = 2000.0f;
 const float BombDropChance = 0.10f;
 const float minShootCD = 1.0f;
 const float maxShootCD = 2.0f;

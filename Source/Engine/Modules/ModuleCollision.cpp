@@ -93,7 +93,7 @@ update_status ModuleCollision::Update()
 
 				if((*it2)->IsActive() && (*it)->IsActive())
 				{//Needed to check again, in case that it changes inside the for loop
-					if(!((*it)->IsReadyToDelete() && !(*it2)->IsReadyToDelete()))
+					if(!(*it)->IsReadyToDelete() && !(*it2)->IsReadyToDelete())
 					{//If one collider is already set to delete, we dont check again, it exist no more
 						if((*it)->CheckCollision(*(*it2)))
 						{

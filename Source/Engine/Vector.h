@@ -304,11 +304,11 @@ public:
 
 	inline fVector Right()
 	{
-		return fVector(m[0][0],-m[0][1]);
+		return fVector(m[0][0],-m[0][1]).normalize();
 	}
 
 	inline fVector Forward(){
-		return fVector(-m[1][0],m[1][1]);
+		return fVector(-m[1][0],m[1][1]).normalize();
 	}
 
 	inline Transform& setMultiply(const Transform& t0, const Transform& t1)

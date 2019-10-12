@@ -5,7 +5,7 @@
 
 RTTI_REGISTER(EnemyShoot)
 
-const float EnemyShootSpeed = -1500.0f;
+const float EnemyShootSpeed = -750.0f;
 
 bool EnemyShoot::Start()
 {

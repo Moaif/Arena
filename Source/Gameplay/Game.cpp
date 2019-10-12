@@ -85,9 +85,10 @@ void Game::NewWave()
 
 void Game::MoveWaveAndShoot()
 {
+	Direction currentMoveDirection = m_currentDirection;
 	for each (Invader * i in m_wave)
 	{
-		switch (m_currentDirection)
+		switch (currentMoveDirection)
 		{
 		case Direction::RIGHT:
 			i->Right();

@@ -5,7 +5,7 @@
 
 RTTI_REGISTER(PlayerShoot)
 
-const float PlayerShootSpeed = 3000.0f;
+const float PlayerShootSpeed = 1500.0f;
 
 bool PlayerShoot::Start()
 {
