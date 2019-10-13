@@ -8,7 +8,7 @@ bool DefaultObject::Start()
 {
 	bool ret = GameObject::Start();
 
-	RendererComponent* renderer = dynamic_cast<RendererComponent*>(AddComponent("RendererComponent"));
+	RendererComponent* renderer = AddComponent<RendererComponent>("RendererComponent");
 	Animation anim = Animation();
 	anim.frames.push_back({ 0, 0, 256, 256 });
 	anim.texture = Textures->Load("assets/Spaceship.png");

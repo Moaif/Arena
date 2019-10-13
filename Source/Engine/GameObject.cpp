@@ -63,16 +63,6 @@ bool GameObject::CleanUp()
 	return ret;
 }
 
-Component* GameObject::AddComponent(const string& className)
-{
-	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
-	m_toStartComponents.push_back(unique_ptr<Component>(rtti.createInstance<Component>()));
-	Component* component = m_toStartComponents.back().get();
-	component->SetGameObject(*this);
-	component->Init();
-	return component;
-}
-
 void GameObject::SetParent(GameObject & newParent)
 {
 	m_localTransfrom = newParent.GetWorldTransform().getInverse() * GetWorldTransform();

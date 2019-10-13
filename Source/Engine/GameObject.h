@@ -30,8 +30,9 @@ public:
 	virtual void OnTriggerStay(ColliderComponent& other){};
 
 	void Destroy(){SetToDelete(true);};
-
-	Component* AddComponent(const std::string& className);
+	
+	template<class TYPE>
+	TYPE* AddComponent(const std::string& className);
 	template<class TYPE> 
 	TYPE* GetComponent();
 
@@ -74,27 +75,41 @@ private:
 };
 
 template<class TYPE>
-TYPE * GameObject::GetComponent()
+TYPE* GameObject::AddComponent(const std::string& className)
+{
+	TYPE* ret = nullptr;
+	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
+	m_toStartComponents.push_back(unique_ptr<Component>(rtti.createInstance<Component>()));
+	if (ret = rtti_cast<TYPE>(m_toStartComponents.back().get())) {
+		ret->SetGameObject(*this);
+		ret->Init();
+	}
+	ASSERT(ret,"Failed to cast on Add component, not compatible types");
+	return ret;
+};
+
+template<class TYPE>
+TYPE* GameObject::GetComponent()
 {
 	TYPE* ret = nullptr;
 	//First check with the started components
-	for(std::vector<std::unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end(); ++it)
+	for (std::vector<std::unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end(); ++it)
 	{
 		ret = rtti_cast<TYPE>((*it).get());
-		if(ret)
+		if (ret)
 		{
 			return ret;
 		}
 	}
 	//Then with not started ones
-	for(std::list<std::unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end(); ++it)
+	for (std::list<std::unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end(); ++it)
 	{
 		ret = rtti_cast<TYPE>((*it).get());
-		if(ret)
+		if (ret)
 		{
 			return ret;
 		}
 	}
 	//Otherwise return nullptr;
 	return ret;
-}
+};
