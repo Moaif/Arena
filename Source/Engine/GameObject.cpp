@@ -81,16 +81,19 @@ void GameObject::SetParent(GameObject & newParent)
 	m_parent->AddChild(*this);
 }
 
-bool GameObject::SetToDelete(bool value)
+void GameObject::SetToDelete(bool value)
 {
 	if(value)
 	{
+		for (list<unique_ptr<Component>>::iterator it = m_toStartComponents.begin(); it != m_toStartComponents.end(); ++it)
+		{
+			(*it)->SetToDelete(true);
+		}
 		for(vector<unique_ptr<Component>>::iterator it = m_components.begin(); it != m_components.end(); ++it)
 		{
 			(*it)->SetToDelete(true);
 		}
 	}
-	return m_toDelete=value;
 }
 
 const Transform & GameObject::GetWorldTransform()

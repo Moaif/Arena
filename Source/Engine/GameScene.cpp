@@ -88,18 +88,19 @@ bool GameScene::CleanUp()
 	return ret;
 }
 
-GameObject * GameScene::Instantiate(const string & className)
+GameObject * GameScene::Instantiate(const string & className, const string& gameObjectName)
 {
 	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
 	GameObject* gameObject = rtti.createInstance<GameObject>();
 	m_toStartGameObjects.push_back(unique_ptr<GameObject>(gameObject));
 	gameObject->SetGameScene(this);
+	gameObject->SetName(gameObjectName.empty() ? className : gameObjectName);
 	return m_toStartGameObjects.back().get();
 }
 
-GameObject * GameScene::Instantiate(const string & className, fVector position, float angle, GameObject * parent)
+GameObject * GameScene::Instantiate(const string & className, fVector position, float angle, GameObject * parent, const string& gameObjectName)
 {
-	GameObject* g = Instantiate(className);
+	GameObject* g = Instantiate(className,gameObjectName);
 	Transform transform = Transform().setIdentity();
 	transform.setPosition(position);
 	transform.setRotation(angle);
@@ -110,4 +111,19 @@ GameObject * GameScene::Instantiate(const string & className, fVector position, 
 	}
 
 	return g;
+}
+
+void GameScene::SetToDelete(bool value)
+{
+	if (value)
+	{
+		for (list<unique_ptr<GameObject>>::iterator it = m_toStartGameObjects.begin(); it != m_toStartGameObjects.end(); ++it)
+		{
+			(*it)->SetToDelete(true);
+		}
+		for (vector<unique_ptr<GameObject>>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
+		{
+			(*it)->SetToDelete(true);
+		}
+	}
 }

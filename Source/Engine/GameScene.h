@@ -1,4 +1,5 @@
 #pragma once
+#include "Object.h"
 #include "RTTI.h"
 #include <memory>
 #include <list>
@@ -7,9 +8,9 @@
 
 class GameObject;
 
-class GameScene
+class GameScene:public Object
 {
-	RTTI_ENABLE_BASE(GameScene)
+	RTTI_ENABLE(GameScene,Object)
 public:
 	//TODO: try to do the same as gameobject and make this private, already tried but as GameScene is used by
 	// modulegameScene and has a unique_ptr to this, it requieres this class starts to ask for a complete definition of
@@ -17,17 +18,14 @@ public:
 	GameScene();
 	virtual ~GameScene();
 
-	virtual bool Init(){return true;};
-	virtual bool Start(){return true;};
-	virtual update_status PreUpdate();
-	virtual update_status Update();
-	virtual bool CleanUp();
+	virtual update_status PreUpdate()override;
+	virtual update_status Update() override;
+	virtual bool CleanUp()override;
 
-	GameObject* Instantiate(const std::string& className);
-	GameObject* Instantiate(const std::string& className,fVector position, float angle = 0, GameObject* parent = nullptr);
+	GameObject* Instantiate(const std::string& className, const std::string& gameObjectName = "");
+	GameObject* Instantiate(const std::string& className,fVector position, float angle = 0, GameObject* parent = nullptr, const std::string & gameObjectName = "");
 
-	bool IsReadyToDelete() const{return m_toDelete;};
-	void SetToDelete(bool value){m_toDelete = value;};
+	virtual void SetToDelete(bool value)override;
 
 private:
 	bool m_toDelete = false;

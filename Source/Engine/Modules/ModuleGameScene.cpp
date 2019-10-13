@@ -6,6 +6,7 @@ using namespace std;
 bool ModuleGameScene::Start()
 {
 	//TODO:: Add the first scene to the game to start it
+	AddScene("Scene");
 
 	return true;
 }
@@ -56,6 +57,7 @@ GameScene * ModuleGameScene::AddScene(const std::string& className)
 {
 	RTTIInfo rtti = RTTIRepo::instance()->getByName(className);
 	m_nextScene = unique_ptr<GameScene>(rtti.createInstance<GameScene>());
+	m_nextScene->SetName(className);
 	return m_nextScene.get();
 }
 

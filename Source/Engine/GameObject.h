@@ -1,4 +1,5 @@
 #pragma once
+#include "Object.h"
 #include "Vector.h"
 #include <vector>
 #include <list>
@@ -10,19 +11,17 @@
 
 class ColliderComponent;
 
-class GameObject {
+class GameObject: public Object {
 
-	RTTI_ENABLE_BASE(GameObject)
+	RTTI_ENABLE(GameObject,Object)
 
 public:
 
 	virtual ~GameObject(){};
 
-	virtual bool Init(){return true;};
-	virtual bool Start(){return true;};
-	virtual update_status PreUpdate();
-	virtual update_status Update();
-	virtual bool CleanUp();
+	virtual update_status PreUpdate()override;
+	virtual update_status Update()override;
+	virtual bool CleanUp()override;
 
 	virtual void OnCollision(ColliderComponent& other) {};
 
@@ -48,8 +47,7 @@ public:
 	void RemoveChild(GameObject& child){m_children.remove(&child);};
 	bool IsActive()const {return m_active;};
 	void SetActive(bool value){m_active = value;};
-	bool IsReadyToDelete()const{return m_toDelete;};
-	bool SetToDelete(bool value = true);
+	virtual void SetToDelete(bool value = true) override;
 	const Transform& GetWorldTransform();
 	void SetWorldTransform(const Transform& transform);
 	Transform& GetLocalTransform(){return m_localTransfrom;};
@@ -62,13 +60,12 @@ protected:
 	GameObject(const GameObject&){};
 	GameObject& operator=(GameObject&&)noexcept{};
 	GameObject(GameObject&&)noexcept{};
-	friend GameObject* GameScene::Instantiate(const std::string& className); //This will be the constructor of this class
+	friend GameObject* GameScene::Instantiate(const std::string& className, const std::string& gameObjectName); //This will be the constructor of this class
 
 private:
 	GameScene* m_currentScene = nullptr;
 	GameObject* m_parent = nullptr;
 	std::list<GameObject*> m_children;
-	bool m_toDelete = false;
 	bool m_active = true;
 	Transform m_localTransfrom;
 	Transform m_worldTransform;
